@@ -1,5 +1,5 @@
 /* common style start */
-.button1 {
+.connect-wallet-button {
     font-weight: normal;
     font-size: 18px;
     line-height: 20px;
@@ -10,12 +10,12 @@
     border-radius: 8px;
 }
 
-.button1::after {
+/* .connect-wallet-button::after {
     content: url(../../Images/icons/signOut.svg);
     padding-left: 20px;
     position: relative;
     top: 2px;
-}
+} */
 
 .commonh1 {
     font-weight: normal;

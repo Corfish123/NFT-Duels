@@ -25,7 +25,8 @@ function Header() {
           </ul>
         </div>
         <div>
-          <button className='button1 me-3'>fsowmo</button>
+        {/* <button onClick={connectWallet}
+                className="connect wallet button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button> */}
         </div>
       </div>
     </div>

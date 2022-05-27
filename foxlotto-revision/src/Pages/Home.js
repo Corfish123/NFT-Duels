@@ -19,13 +19,102 @@ import whiteSign from '../Images/what-Sign.svg'
 import hs3img from '../Images/unsplash_ZnHRNtwXg6Q.png'
 import Modals1 from '../Utils/Modals/Modals1'
 import Modals2 from '../Utils/Modals/Modals2'
+import { ethers } from 'ethers'
+import { useState } from 'react';
+
+import '../Styles/font/HarabaraMaisDemo.otf'
+import '../Styles/css/style.css'
+import '../Styles/css/responsive.css'
+import Icon1 from '../Images/icons/Dollar.svg'
+import Icon2 from '../Images/icons/giftIcon.svg'
+import Icon3 from '../Images/icons/people-group.svg'
+import Icon4 from '../Images/icons/check.svg'
+import Icon5 from '../Images/icons/support.svg'
 
 function Home() {
   const [modalShow, setModalShow] = React.useState(false);
-  const [modalShow2, setModalShow2] = React.useState(false);
+  const [pickNFTModal, setPickNFTModal] = React.useState(false);
+  const [walletAddress, setWalletAddress] = useState('');
+
+  //requesting to connect a meta mask account
+  async function requestAccount() {
+    console.log('Requesting account...');
+
+    // ❌ Check if Meta Mask Extension exists 
+    if (window.ethereum) {
+      console.log('detected');
+
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        setWalletAddress(accounts[0]);
+      } catch (error) {
+        console.log('Error connecting...');
+      }
+
+    } else {
+      alert('Meta Mask not detected');
+    }
+  }
+
+  // Create a provider to interact with a smart contract
+  async function connectWallet() {
+    console.log()
+    if (typeof window.ethereum !== 'undefined') {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      renderTokensForOwner(walletAddress)
+    }
+  }
+
+  //get NFTs from owner's wallet
+  async function renderTokensForOwner(ownerAddress){
+    fetch(
+      `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=0&limit=50`,
+      { method: "GET", headers: { Accept: "application/json" } }
+    ).then(response => response.json()).then(({ assets }) => {
+      assets.forEach((nft) => {
+        document.getElementById("container").append(createTokenElement(nft))
+      })
+    })
+  }
+  
+  const createTokenElement = ({ name, collection, description, permalink, image_preview_url, token_id }) => {
+    const newElement = document.getElementById("nft_template").content.cloneNode(true)
+  
+    newElement.querySelector("section").id = `${collection.slug}_${token_id}`
+    newElement.querySelector("h1").innerText = name
+    newElement.querySelector("a").href = permalink
+    newElement.querySelector("img").src = image_preview_url
+    newElement.querySelector("img").alt = description
+  
+    return newElement
+  }
+
+
   return (
     <>
-      <Header />
+      <div className='header-main'>
+      <div className='header-main-child-1'>
+        
+      </div>
+      <div className='header-main-child-2'>
+        <div>
+          <ul>
+            <li><img src={Icon1} alt="" /><a href="/">FUNDS</a></li>
+            <li><img src={Icon2} alt="" /><a href="/">CASHBACK</a></li>
+            <li><img src={Icon3} alt="" /><a href="/">AFFLIATE</a></li>
+            <li><img src={Icon4} alt="" /><a href="/">PROVABLY FAIR</a></li>
+            <li><img src={Icon5} alt="" /><a href="/">SUPPORT</a></li>
+          </ul>
+        </div>
+        <div>
+        <button onClick={connectWallet}
+                className="connect-wallet-button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button>
+        </div>
+      </div>
+    </div>
       <div className='site-main'>
         <div className="sm-child1">
           <LeftSidebar />
@@ -90,15 +179,15 @@ function Home() {
               <div className="hs2-child3">
                 <div>
                   <p className='hs2-bet'>Bet</p>
-                  <div className='picknft' onClick={() => setModalShow2(true)} style={{ cursor: "pointer" }}>
+                  <div className='picknft' onClick={() => setPickNFTModal(true)} style={{ cursor: "pointer" }}>
                     <p className='m-0'>PICK NFT</p>
                     <div className='picknft-right'>
                       <img src={arrow} alt="" />
                     </div>
                   </div>
                   <Modals2
-                    show={modalShow2}
-                    onHide={() => setModalShow2(false)}
+                    show={pickNFTModal}
+                    onHide={() => setPickNFTModal(false)}
                   />
                 </div>
                 <div className='hs2-second'>
