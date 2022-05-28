@@ -13,16 +13,16 @@ function RightSidebar() {
                 {/* message div */}
                 <div className='message-div'>
                     <div>
-                        <p className='chat-title'>Peralta <span className='chat-time'>19:04</span></p>
-                        <p className='chat-body'>me sleep to la XD xDme sleep to la XD xD me sleep to la XD xD me sleep to la XD xD me sleep to la XD xD</p>
+                        <p className='chat-title'>Connor <span className='chat-time'>19:04</span></p>
+                        <p className='chat-body'>Just took a fat dub for the homies</p>
                     </div>
                     <img src={disableLike} className="chat-Likebtn" alt="" />
                 </div>
                 {/* message div */}
                 <div className='message-div'>
                     <div>
-                        <p className='chat-title'>Peralta <span className='chat-time'>19:04</span></p>
-                        <p className='chat-body'>me sleep to la XD xD</p>
+                        <p className='chat-title'>Corwin <span className='chat-time'>19:06</span></p>
+                        <p className='chat-body'>YOOOOO LETS GO</p>
                     </div>
                     <img src={disableLike} className="chat-Likebtn" alt="" />
                 </div>
