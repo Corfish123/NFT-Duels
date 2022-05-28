@@ -11,12 +11,8 @@ function LeftSidebar() {
                 <img src={logo} className="site-logo" alt="" />
             </div>
             <div className='left-sidebar-list mt-4'>
-                <div>
-                    <span className='list1'>Coin Flip</span>
-                </div>
-                <div>
-                    <span className='list1Number'>10</span>
-                </div>
+                <span className='list1'>Coin Flip</span>
+                <span className='list1Number'>10</span>
             </div>
             <div className='social-icon-div'>
                 <ul>

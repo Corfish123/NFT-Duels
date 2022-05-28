@@ -29,7 +29,7 @@
 
 .header-main {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 320px 1fr 320px;
 }
 
 .header-main-child-1 {
@@ -235,7 +235,7 @@
 
 .message-div {
     display: grid;
-    grid-template-columns: 32px 1fr;
+    grid-template-columns: 1fr;
     grid-gap: 20px;
     width: 90%;
     margin: 0 auto;
@@ -271,7 +271,7 @@
     font-size: 14px;
     line-height: 16px;
     color: #fff;
-    width: 120px;
+    width: 240px;
 }
 
 .chat-Likebtn {
@@ -331,7 +331,7 @@
     color: #BFD1FF;
 }
 
-.hs1-fisrt {
+.hs1-first {
     font-weight: normal;
     font-size: 25px;
     color: #FFFFFF;
@@ -402,6 +402,7 @@
     color: #BFD1FF;
     font-size: 15px;
     margin: 0;
+    margin-left: 10px;
 }
 
 .hs2-child3 {
@@ -419,7 +420,7 @@
     font-size: 15px;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90px;
+    width: 79px;
 }
 
 .hs2-second {
@@ -445,10 +446,19 @@
     background: linear-gradient(90deg, rgba(55, 63, 125, 0.58) 0%, rgba(79, 92, 191, 0.16) 100%);
     border-radius: 8px;
     height: 80px;
-    display: grid;
-    grid-template-columns: 70px 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 0px 20px;
+}
+
+.join-game-button {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
 }
 
 .hs3icon1 {
@@ -470,14 +480,17 @@
     opacity: 0.5;
 }
 
-.agd-child-1 {
-    border-right: 1px solid rgba(0, 0, 0, 0.5);
+.agd-child-2 {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
-.agd-child-2 {
-    display: grid;
-    grid-template-columns: 1fr 147px 138px 102px 55px 50px;
-    align-items: center;
+.agd-username {
+    font-weight: normal;
+    font-size: 18px;
+    color: #BFD1FF;
+    margin: 0 20px;
 }
 
 .hs3-placebetbg {
