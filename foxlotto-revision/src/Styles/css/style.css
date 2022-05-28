@@ -8,6 +8,7 @@
     background-color: #E10083;
     padding: 15px 20px;
     border-radius: 8px;
+    margin-right: 25px;
 }
 
 /* .connect-wallet-button::after {
@@ -291,7 +292,6 @@
 }
 
 .site-middle-container {
-    padding-top: 100px;
     width: 80%;
     margin: 0 auto;
 }
@@ -372,6 +372,10 @@
     justify-content: center;
 }
 
+.hs2-child3 {
+    background-color: #373f7d;
+}
+
 .picknft {
     background-color: #2F3972;
     position: relative;
@@ -406,6 +410,7 @@
     justify-content: flex-end;
     padding-right: 20px;
 }
+
 .placebet-para {
     color: #fff;
     margin: 0;
@@ -414,6 +419,7 @@
     font-size: 15px;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 90px;
 }
 
 .hs2-second {
@@ -474,7 +480,7 @@
     align-items: center;
 }
 
-.hs3-pacebetbg {
+.hs3-placebetbg {
     height: 36px;
 }
 
@@ -580,7 +586,8 @@
     border-radius: 6px;
 }
 
-.modal-contents h4, p {
+.modal-contents h4,
+p {
     margin: 0;
 }
 

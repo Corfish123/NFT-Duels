@@ -10,7 +10,7 @@ import icon4 from '../Images/icons/fa-solid_percentage.svg'
 import icon5 from '../Images/icons/check.svg'
 import hexagonal from '../Images/hexgonal.svg'
 import arrow from '../Images/arrow.svg'
-import pacebetbg from '../Images/placebetbg.svg'
+import placebetbg from '../Images/placebet.png'
 import privateGame from '../Images/privateGame.svg'
 import crownIcon from '../Images/crownicon.svg'
 import boldcrown from '../Images/bold-king.svg'
@@ -69,7 +69,7 @@ function Home() {
   }
 
   //get NFTs from owner's wallet
-  async function renderTokensForOwner(ownerAddress){
+  async function renderTokensForOwner(ownerAddress) {
     fetch(
       `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=0&limit=50`,
       { method: "GET", headers: { Accept: "application/json" } }
@@ -79,16 +79,16 @@ function Home() {
       })
     })
   }
-  
+
   const createTokenElement = ({ name, collection, description, permalink, image_preview_url, token_id }) => {
     const newElement = document.getElementById("nft_template").content.cloneNode(true)
-  
+
     newElement.querySelector("section").id = `${collection.slug}_${token_id}`
     newElement.querySelector("h1").innerText = name
     newElement.querySelector("a").href = permalink
     newElement.querySelector("img").src = image_preview_url
     newElement.querySelector("img").alt = description
-  
+
     return newElement
   }
 
@@ -96,25 +96,24 @@ function Home() {
   return (
     <>
       <div className='header-main'>
-      <div className='header-main-child-1'>
-        
-      </div>
-      <div className='header-main-child-2'>
-        <div>
-          <ul>
-            <li><img src={Icon1} alt="" /><a href="/">FUNDS</a></li>
-            <li><img src={Icon2} alt="" /><a href="/">CASHBACK</a></li>
-            <li><img src={Icon3} alt="" /><a href="/">AFFLIATE</a></li>
-            <li><img src={Icon4} alt="" /><a href="/">PROVABLY FAIR</a></li>
-            <li><img src={Icon5} alt="" /><a href="/">SUPPORT</a></li>
-          </ul>
+        <div className='header-main-child-1'>
         </div>
-        <div>
-        <button onClick={connectWallet}
-                className="connect-wallet-button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button>
+        <div className='header-main-child-2'>
+          <div>
+            <ul>
+              <li><img src={Icon1} alt="" /><a href="/">FUNDS</a></li>
+              <li><img src={Icon2} alt="" /><a href="/">CASHBACK</a></li>
+              <li><img src={Icon3} alt="" /><a href="/">AFFLIATE</a></li>
+              <li><img src={Icon4} alt="" /><a href="/">PROVABLY FAIR</a></li>
+              <li><img src={Icon5} alt="" /><a href="/">SUPPORT</a></li>
+            </ul>
+          </div>
+          <div>
+            <button onClick={connectWallet}
+              className="connect-wallet-button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button>
+          </div>
         </div>
       </div>
-    </div>
       <div className='site-main'>
         <div className="sm-child1">
           <LeftSidebar />
@@ -192,14 +191,14 @@ function Home() {
                 </div>
                 <div className='hs2-second'>
                   <div className='position-relative' style={{ cursor: 'pointer' }} >
-                    <img src={pacebetbg} alt="" onClick={() => setModalShow(true)} />
+                    <img src={placebetbg} className='hs3-placebetbg' alt="" onClick={() => setModalShow(true)} />
                     <p className='placebet-para' onClick={() => setModalShow(true)} >PLACE BET</p>
                     <Modals1
                       show={modalShow}
                       onHide={() => setModalShow(false)}
                     />
                   </div>
-                  <p className='text-white text-center mb-0 mt-3'>PRIVATE GAME <img src={privateGame} alt="" /></p>
+                  {/* <p className='text-white text-center mb-0 mt-3'>PRIVATE GAME <img src={privateGame} alt="" /></p> */}
                 </div>
               </div>
             </div>
@@ -217,7 +216,7 @@ function Home() {
                 <div></div>
                 <div>
                   <div className='position-relative d-inline'>
-                    <img src={pacebetbg} className="hs3-pacebetbg" alt="" />
+                    <img src={placebetbg} className="hs3-placebetbg" alt="" />
                     <p className='placebet-para hs3-text'>JOIN 56.42 <sub>ETH</sub></p>
                   </div>
                 </div>
@@ -257,18 +256,12 @@ function Home() {
                 <div></div>
                 <div>
                   <div className='position-relative d-inline'>
-                    <img src={pacebetbg} className="hs3-pacebetbg" alt="" />
+                    <img src={placebetbg} className="hs3-placebetbg" alt="" />
                     <p className='placebet-para hs3-text'>JOIN 56.42 <sub>ETH</sub></p>
                   </div>
                 </div>
                 <div>
                   <div className='d-inline'>
-                    <div className='white-sign me-2'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                    <div className='white-sign me-2'>
-                      <img src={whiteSign} alt="" />
-                    </div>
                     <div className='white-sign me-2'>
                       <img src={whiteSign} alt="" />
                     </div>
@@ -306,12 +299,6 @@ function Home() {
                     <div className='white-sign me-3'>
                       <img src={whiteSign} alt="" />
                     </div>
-                    <div className='white-sign me-3'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                    <div className='white-sign me-2'>
-                      <img src={whiteSign} alt="" />
-                    </div>
                   </div>
                 </div>
                 <div>
@@ -339,12 +326,6 @@ function Home() {
                 <div>
                   <div className='d-inline'>
                     <div className='white-sign me-3'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                    <div className='white-sign me-3'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                    <div className='white-sign me-2'>
                       <img src={whiteSign} alt="" />
                     </div>
                   </div>
