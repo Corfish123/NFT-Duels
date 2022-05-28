@@ -1,8 +1,8 @@
 import React from 'react'
-import logo from '../../Images/LOGO.svg'
-import discord from '../../Images/socialIcons/discord.svg'
-import twitter from '../../Images/socialIcons/twitter.svg'
-import insta from '../../Images/socialIcons/instagram.svg'
+import logo from '../Images/random/LOGO.svg'
+import discord from '../Images/socialIcons/discord.svg'
+import twitter from '../Images/socialIcons/twitter.svg'
+import insta from '../Images/socialIcons/instagram.svg'
 
 function LeftSidebar() {
     return (

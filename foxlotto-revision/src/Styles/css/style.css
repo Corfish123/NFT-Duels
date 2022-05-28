@@ -343,7 +343,7 @@
 }
 
 .h-section-2 {
-    background-image: url(../../Images/h-section-2bg.png);
+    background-image: url(../../Images/random/h-section-2bg.png);
     height: 130px;
     background-repeat: no-repeat;
     width: 100%;
@@ -434,7 +434,7 @@
 }
 
 .h-s3-subtitle::before {
-    content: url(../../Images/group-man.svg);
+    content: url(../../Images/random/group-man.svg);
     padding-right: 10px;
     position: relative;
     top: 5px;
@@ -695,7 +695,7 @@ p {
 }
 
 .m-footer::before {
-    content: url(../../Images/importantIcon.svg);
+    content: url(../../Images/random/importantIcon.svg);
     position: absolute;
     left: -30px;
     top: -2px;
@@ -770,7 +770,7 @@ p {
 }
 
 .mCard-footerLeft_text::before {
-    content: url(../../Images/bag-heart-fill.svg);
+    content: url(../../Images/random/bag-heart-fill.svg);
     padding-right: 5px;
     position: relative;
     top: 2px;

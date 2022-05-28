@@ -1,14 +1,14 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 import '../../Styles/css/style.css'
-import closeBtn from '../../Images/closeBtn.png'
-import modalimg1 from '../../Images/modalImg1.png'
-import modalimg2 from '../../Images/modalImg2.png'
-import flippingCircle from '../../Images/flippingCIrcle.svg'
-import bigCrown from '../../Images/bigCrown.svg'
-import bigSnow from '../../Images/BigSnow.svg'
-import ms2Img1 from '../../Images/m-s2-img1.png'
-import ms2Img2 from '../../Images/m-s2-img2.png'
+import closeBtn from '../../Images/random/closeBtn.png'
+import modalimg1 from '../../Images/random/modalImg1.png'
+import modalimg2 from '../../Images/random/modalImg2.png'
+import flippingCircle from '../../Images/random/flippingCIrcle.svg'
+import bigCrown from '../../Images/random/bigCrown.svg'
+import bigSnow from '../../Images/random/BigSnow.svg'
+import ms2Img1 from '../../Images/random/m-s2-img1.png'
+import ms2Img2 from '../../Images/random/m-s2-img2.png'
 
 function Modals1(props) {
     console.log(props)
@@ -64,7 +64,7 @@ function Modals1(props) {
                     </div>
                     {/* section-2 */}
                     <div className='text-center mt-4'>
-                        <img src={closeBtn} alt="" onClick={props.onHide} style={{cursor:"pointer"}} />
+                        <img src={closeBtn} alt="" onClick={props.onHide} style={{ cursor: "pointer" }} />
                     </div>
                     {/* modal footer */}
                     <div className='m-footer mt-5'>

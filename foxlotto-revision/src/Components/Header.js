@@ -1,18 +1,18 @@
 import React from 'react'
-import '../../Styles/font/HarabaraMaisDemo.otf'
-import '../../Styles/css/style.css'
-import '../../Styles/css/responsive.css'
-import Icon1 from '../../Images/icons/Dollar.svg'
-import Icon2 from '../../Images/icons/giftIcon.svg'
-import Icon3 from '../../Images/icons/people-group.svg'
-import Icon4 from '../../Images/icons/check.svg'
-import Icon5 from '../../Images/icons/support.svg'
+import '../Styles/font/HarabaraMaisDemo.otf'
+import '../Styles/css/style.css'
+import '../Styles/css/responsive.css'
+import Icon1 from '../Images/icons/Dollar.svg'
+import Icon2 from '../Images/icons/giftIcon.svg'
+import Icon3 from '../Images/icons/people-group.svg'
+import Icon4 from '../Images/icons/check.svg'
+import Icon5 from '../Images/icons/support.svg'
 
 function Header() {
   return (
     <div className='header-main'>
       <div className='header-main-child-1'>
-        
+
       </div>
       <div className='header-main-child-2'>
         <div>
@@ -25,7 +25,7 @@ function Header() {
           </ul>
         </div>
         <div>
-        {/* <button onClick={connectWallet}
+          {/* <button onClick={connectWallet}
                 className="connect wallet button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button> */}
         </div>
       </div>

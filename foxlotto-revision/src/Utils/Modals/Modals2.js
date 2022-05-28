@@ -1,9 +1,9 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 import '../../Styles/css/style.css'
-import searchIcon from '../../Images/SearchIcon.svg'
-import mCardimg1 from '../../Images/m-card-img1.png'
-import mCardimg2 from '../../Images/m-card-img2.png'
+import searchIcon from '../../Images/random/SearchIcon.svg'
+import mCardimg1 from '../../Images/random/m-card-img1.png'
+import mCardimg2 from '../../Images/random/m-card-img2.png'
 
 function Modals2(props) {
     return (
@@ -20,8 +20,8 @@ function Modals2(props) {
                         <input type="text" className='m-input-field' placeholder='Search NFTs, Users...' />
                         <img src={searchIcon} className="m-searchIcon" alt="" />
                     </div>
-                     
-                     <h4 className='mt-5 text-white'>Popular NFTs</h4>
+
+                    <h4 className='mt-5 text-white'>Popular NFTs</h4>
                     {/* modal card */}
                     <div className='modal-card my-4'>
                         <div className='m-card'>
@@ -35,7 +35,7 @@ function Modals2(props) {
                                     <p className='mCard-footerLeft_text'>WISHLIST</p>
                                 </div>
                                 <div>
-                                    <p className='mCard-price'>1526.52 <sub style={{fontSize:"10px"}}>ETH</sub></p>
+                                    <p className='mCard-price'>1526.52 <sub style={{ fontSize: "10px" }}>ETH</sub></p>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@ function Modals2(props) {
                                     <p className='mCard-footerLeft_text'>WISHLIST</p>
                                 </div>
                                 <div>
-                                    <p className='mCard-price'>1316.71 <sub style={{fontSize:"10px"}}>ETH</sub></p>
+                                    <p className='mCard-price'>1316.71 <sub style={{ fontSize: "10px" }}>ETH</sub></p>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@ function Modals2(props) {
                                     <p className='mCard-footerLeft_text'>WISHLIST</p>
                                 </div>
                                 <div>
-                                    <p className='mCard-price'>1526.52 <sub style={{fontSize:"10px"}}>ETH</sub></p>
+                                    <p className='mCard-price'>1526.52 <sub style={{ fontSize: "10px" }}>ETH</sub></p>
                                 </div>
                             </div>
                         </div>

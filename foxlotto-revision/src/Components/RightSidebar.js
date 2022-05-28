@@ -1,10 +1,10 @@
 import React from 'react'
-import send from '../../Images/icons/send.svg'
-import chaticon from '../../Images/icons/message.svg'
-import settings from '../../Images/icons/settings.svg'
-import close from '../../Images/icons/close.svg'
-import chatProfileImg from '../../Images/chat-profile-img.png'
-import disableLike from '../../Images/icons/disableLike.svg'
+import send from '../Images/icons/send.svg'
+import chaticon from '../Images/icons/message.svg'
+import settings from '../Images/icons/settings.svg'
+import close from '../Images/icons/close.svg'
+import chatProfileImg from '../Images/random/chat-profile-img.png'
+import disableLike from '../Images/icons/disableLike.svg'
 
 function RightSidebar() {
     return (
