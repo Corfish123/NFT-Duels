@@ -1,10 +1,6 @@
 import React from 'react'
 import logo from '../Images/random/LOGO.svg'
-import { ReactDOM } from 'react'
 import { SocialIcon } from 'react-social-icons'
-// import discord from '../Images/socialIcons/discord.svg'
-// import twitter from '../Images/socialIcons/twitter.svg'
-// import insta from '../Images/socialIcons/instagram.svg'
 
 function LeftSidebar() {
     return (
