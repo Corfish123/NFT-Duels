@@ -18,8 +18,10 @@ import whiteSign from '../Images/random/what-Sign.svg'
 import hs3img from '../Images/random/unsplash_ZnHRNtwXg6Q.png'
 import CoinFlipModal from '../Components/CoinFlipModal'
 import PickNFTModal from '../Components/PickNFTModal'
+import FeeModal from '../Components/feeModal.js'
 import { ethers } from 'ethers'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import '../Styles/font/HarabaraMaisDemo.otf'
 import '../Styles/css/style.css'
@@ -30,11 +32,12 @@ import Icon3 from '../Images/icons/people-group.svg'
 import Icon4 from '../Images/icons/check.svg'
 import Icon5 from '../Images/icons/support.svg'
 import ActiveGame from '../Components/ActiveGame.js'
-import RecentGame from './../Components/RecentGame';
+import RecentGame from '../Components/RecentGame';
 
-function Home() {
-  const [modalShow, setModalShow] = React.useState(false);
+function CoinFlip() {
+  const [coinFlipModal, setCoinFlipModal] = React.useState(false);
   const [pickNFTModal, setPickNFTModal] = React.useState(false);
+  const [feeModal, setFeeModal] = React.useState(false);
   const [walletAddress, setWalletAddress] = useState('');
 
   //requesting to connect a meta mask account
@@ -101,9 +104,21 @@ function Home() {
         <div className='header-main-child-1' />
         <div className='header-main-child-2'>
           <ul>
-            <li><img src={Icon3} alt="" /><a href="/">AFFLIATE</a></li>
-            <li><img src={Icon4} alt="" /><a href="/">PROVABLY FAIR</a></li>
-            <li><img src={Icon5} alt="" /><a href="/">SUPPORT</a></li>
+            <li>
+              <Link to='/affiliate'>
+                <img src={Icon3} alt="" />AFFLIATE
+              </Link>
+            </li>
+            <li>
+              <Link to='/provably-fair'>
+                <img src={Icon4} alt="" />PROVABLY FAIR
+              </Link>
+            </li>
+            <li>
+              <Link to='/support'>
+                <img src={Icon5} alt="" />SUPPORT
+              </Link>
+            </li>
           </ul>
           <button onClick={connectWallet}
             className="connect-wallet-button">{walletAddress === '' ? "CONNECT WALLET" : walletAddress}</button>
@@ -119,13 +134,29 @@ function Home() {
             <div className="h-section-1">
               <p className="hs1-first">Coin Flip</p>
               <div>
-                <img src={icon1} alt="" /><a href="/" className="hs-history">HISTORY</a>
+                <Link to='/coinflip/history'>
+                  <img src={icon1} alt="" />HISTORY
+                </Link>
               </div>
               <div>
-                <img src={icon2} alt="" /><a href="/" className="hs-history">TOP</a>
+                <Link to='/coinflip/top'>
+                  <img src={icon2} alt="" />TOP
+                </Link>
               </div>
               <div>
-                <img src={icon3} alt="" /><a href="/" className="hs-history">HOW TO PLAY</a>
+                <Link to='/coinflip/how-to-play'>
+                  <img src={icon3} alt="" />HOW TO PLAY
+                </Link>
+              </div>
+              {/* make 2% fee modal */}
+              <div>
+                <div className="h-section-1-modal-text" onClick={() => setFeeModal(true)}>
+                  <img src={icon4} alt="" />2% FEE
+                </div>
+                <FeeModal
+                  show={feeModal}
+                  onHide={() => setFeeModal(false)}
+                />
               </div>
             </div>
             <div className="h-section-2">
@@ -165,11 +196,11 @@ function Home() {
                 </div>
                 <div className='hs2-second'>
                   <div className='position-relative' style={{ cursor: 'pointer' }} >
-                    <img src={placebetbg} className='hs3-placebetbg' alt="" onClick={() => setModalShow(true)} />
-                    <p className='placebet-para' onClick={() => setModalShow(true)} >PLACE BET</p>
+                    <img src={placebetbg} className='hs3-placebetbg' alt="" onClick={() => setCoinFlipModal(true)} />
+                    <p className='placebet-para' onClick={() => setCoinFlipModal(true)} >PLACE BET</p>
                     <CoinFlipModal
-                      show={modalShow}
-                      onHide={() => setModalShow(false)}
+                      show={coinFlipModal}
+                      onHide={() => setCoinFlipModal(false)}
                     />
                   </div>
                 </div>
@@ -201,8 +232,13 @@ function Home() {
             //price=
             //nft=
             />
-            {/* section-4 */}
-            <div className='p-5'></div>
+            <div className="footer-links">
+              <Link to='/terms-and-conditions'>Terms and Conditions</Link>
+              <Link to='/privacy-policy'>Privacy Policy</Link>
+              <Link to='/cookie-policy'>Cookie Policy</Link>
+              <Link to='/aml-policy'>AML Policy</Link>
+              <Link to='/responsible-gambling'>Responsible Gambling</Link>
+            </div>
           </div>
         </div>
         <div className="sm-child3">
@@ -213,4 +249,4 @@ function Home() {
   )
 }
 
-export default Home
+export default CoinFlip
