@@ -16,8 +16,8 @@ import boldcrown from '../Images/random/bold-king.svg'
 import snow from '../Images/random/snowflake.svg'
 import whiteSign from '../Images/random/what-Sign.svg'
 import hs3img from '../Images/random/unsplash_ZnHRNtwXg6Q.png'
-import Modals1 from '../Utils/Modals/Modals1'
-import Modals2 from '../Utils/Modals/Modals2'
+import CoinFlipModal from '../Components/CoinFlipModal'
+import PickNFTModal from '../Components/PickNFTModal'
 import { ethers } from 'ethers'
 import { useState } from 'react';
 
@@ -29,6 +29,8 @@ import Icon2 from '../Images/icons/giftIcon.svg'
 import Icon3 from '../Images/icons/people-group.svg'
 import Icon4 from '../Images/icons/check.svg'
 import Icon5 from '../Images/icons/support.svg'
+import ActiveGame from '../Components/ActiveGame.js'
+import RecentGame from './../Components/RecentGame';
 
 function Home() {
   const [modalShow, setModalShow] = React.useState(false);
@@ -99,8 +101,6 @@ function Home() {
         <div className='header-main-child-1' />
         <div className='header-main-child-2'>
           <ul>
-            <li><img src={Icon1} alt="" /><a href="/">FUNDS</a></li>
-            <li><img src={Icon2} alt="" /><a href="/">CASHBACK</a></li>
             <li><img src={Icon3} alt="" /><a href="/">AFFLIATE</a></li>
             <li><img src={Icon4} alt="" /><a href="/">PROVABLY FAIR</a></li>
             <li><img src={Icon5} alt="" /><a href="/">SUPPORT</a></li>
@@ -117,9 +117,7 @@ function Home() {
           <div className="site-middle-container">
             {/* section-1 */}
             <div className="h-section-1">
-              <div>
-                <p className="hs1-first">Coin Flip</p>
-              </div>
+              <p className="hs1-first">Coin Flip</p>
               <div>
                 <img src={icon1} alt="" /><a href="/" className="hs-history">HISTORY</a>
               </div>
@@ -129,15 +127,7 @@ function Home() {
               <div>
                 <img src={icon3} alt="" /><a href="/" className="hs-history">HOW TO PLAY</a>
               </div>
-              <div>
-                <img src={icon4} alt="" /><a href="/" className="hs-history">2% FEE</a>
-              </div>
-              <div>
-                <img src={icon5} alt="" /><a href="/" className="hs-history">FAIRNESS</a>
-              </div>
             </div>
-            {/* section-1 */}
-            {/* section-2 */}
             <div className="h-section-2">
               <div className="hs2-child1">
                 <div className='hs2-child1-inner'>
@@ -168,7 +158,7 @@ function Home() {
                       <img src={arrow} alt="" />
                     </div>
                   </div>
-                  <Modals2
+                  <PickNFTModal
                     show={pickNFTModal}
                     onHide={() => setPickNFTModal(false)}
                   />
@@ -177,7 +167,7 @@ function Home() {
                   <div className='position-relative' style={{ cursor: 'pointer' }} >
                     <img src={placebetbg} className='hs3-placebetbg' alt="" onClick={() => setModalShow(true)} />
                     <p className='placebet-para' onClick={() => setModalShow(true)} >PLACE BET</p>
-                    <Modals1
+                    <CoinFlipModal
                       show={modalShow}
                       onHide={() => setModalShow(false)}
                     />
@@ -186,104 +176,31 @@ function Home() {
               </div>
             </div>
             <h1 className='commonh1 mt-5 mb-4'>Active Games <span className='h-s3-subtitle'>2 Games Online</span></h1>
-            {/* Active game 1 */}
-            <div className='active-games-div mt-2'>
-              <div className='icon-div crownIcon'>
-                <img src={crownIcon} alt="" />
-              </div>
-              <div className='join-game-button d-inline'>
-                <img src={placebetbg} className="hs3-placebetbg" alt="" />
-                <p className='placebet-para hs3-text'>JOIN 56.42 <sub>ETH</sub></p>
-              </div>
-              <div className='agd-child-2'>
-                <div className='white-sign' >
-                  <img src={whiteSign} alt="" />
-                </div>
-                <span className='agd-username'>fros231jkfa</span>
-                <div className='icon-div2'>
-                  <img src={snow} alt="" />
-                </div>
-              </div>
-            </div>
-            {/* Active game 2 */}
-            <div className='active-games-div mt-2'>
-              <div className='agd-child-2'>
-                <div className='icon-div'>
-                  <img src={crownIcon} alt="" />
-                </div>
-                <span className='agd-username'>fros231jkfa</span>
-                <div className='white-sign' >
-                  <img src={whiteSign} alt="" />
-                </div>
-              </div>
-              <div className='join-game-button d-inline'>
-                <img src={placebetbg} className="hs3-placebetbg" alt="" />
-                <p className='placebet-para hs3-text'>JOIN 56.42 <sub>ETH</sub></p>
-              </div>
-              <div className='icon-div2 crownIcon'>
-                <img src={snow} alt="" />
-              </div>
-            </div>
-            {/* Recent games HAVENT TOUCHED */}
+            <ActiveGame
+              side="red"
+              user="fros231jkfa"
+            //price=
+            //nft=
+            />
+            <ActiveGame
+              side="blue"
+              user="fros231jkfa"
+            //price=
+            //nft=
+            />
             <h1 className='commonh1 mt-5 mb-4'>Recent Games</h1>
-            <div className='active-games-div2 active-games-div2-bg1'>
-              <div className='agd2-child-1'>
-                <div className='icon-div'>
-                  <img src={boldcrown} alt="" />
-                </div>
-              </div>
-              <div className='agd2-child-2'>
-                <div className='ms-3'>
-                  <p className='agd2-p1'>D1SFUN2I0N</p>
-                  <p className='agd2-p2'>FRI 12 Feb, 2022</p>
-                </div>
-                <div>
-                  <div className='d-inline'>
-                    <div className='white-sign me-3'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <span className='hs3-username'>fros231jkfa</span>
-                </div>
-                <div>
-                  <img src={hs3img} className="active-user-profile" alt="" />
-                </div>
-                <div>
-                  <p className='r-price-number'>3124.81 <sub>ETH</sub> </p>
-                </div>
-              </div>
-            </div>
-            <div className='active-games-div2 active-games-div2-bg2 mt-2'>
-              <div className='agd2-child-1'>
-                <div className='icon-div2'>
-                  <img src={snow} alt="" />
-                </div>
-              </div>
-              <div className='agd2-child-2'>
-                <div className='ms-3'>
-                  <p className='agd2-p1'>D1SFUN2I0N</p>
-                  <p className='agd2-p2'>FRI 12 Feb, 2022</p>
-                </div>
-                <div>
-                  <div className='d-inline'>
-                    <div className='white-sign me-3'>
-                      <img src={whiteSign} alt="" />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <span className='hs3-username'>fros231jkfa</span>
-                </div>
-                <div>
-                  <img src={hs3img} className="active-user-profile" alt="" />
-                </div>
-                <div>
-                  <p className='r-price-number'>3124.81 <sub>ETH</sub> </p>
-                </div>
-              </div>
-            </div>
+            <RecentGame
+              side="red"
+              user="fros231jkfa"
+            //price=
+            //nft=
+            />
+            <RecentGame
+              side="blue"
+              user="fros231jkfa"
+            //price=
+            //nft=
+            />
             {/* section-4 */}
             <div className='p-5'></div>
           </div>

@@ -1,26 +1,37 @@
 @media only screen and (max-width: 1440px) {
     .leftSidebar {
-        width: 250px;
+        width: 240px;
     }
+
     .header-main {
-        grid-template-columns: 250px 1fr;
-        position: fixed;
-        z-index: 11;
-        width: 100%;
+        left: 240px;
+        width: calc(100% - 240px);
     }
-    .social-icon-div li img{
+
+    .social-icon-div li img {
         width: 30px;
     }
-    .RightSidebar{
+
+    .RightSidebar {
         width: 250px;
     }
-    .site-main{
-        grid-template-columns: 250px 1fr 250px;
+
+    .RightSidebar-footer {
+        width: 250px;
     }
+
+    .chat-box {
+        width: 190px;
+    }
+
+    .site-main {
+        grid-template-columns: 240px 1fr 250px;
+    }
+
     .site-middle-container {
         width: 90%;
-        margin: 0 auto;
     }
+
     .h-section-1 img {
         width: 16px;
     }

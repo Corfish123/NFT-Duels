@@ -1,11 +1,11 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import '../../Styles/css/style.css'
-import searchIcon from '../../Images/random/SearchIcon.svg'
-import mCardimg1 from '../../Images/random/m-card-img1.png'
-import mCardimg2 from '../../Images/random/m-card-img2.png'
+import '../Styles/css/style.css'
+import searchIcon from '../Images/random/SearchIcon.svg'
+import mCardimg1 from '../Images/random/m-card-img1.png'
+import mCardimg2 from '../Images/random/m-card-img2.png'
 
-function Modals2(props) {
+function PickNFTModal(props) {
     return (
         <Modal
             {...props}
@@ -78,4 +78,4 @@ function Modals2(props) {
     )
 }
 
-export default Modals2
+export default PickNFTModal

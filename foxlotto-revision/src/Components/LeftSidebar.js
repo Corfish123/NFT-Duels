@@ -1,8 +1,10 @@
 import React from 'react'
 import logo from '../Images/random/LOGO.svg'
-import discord from '../Images/socialIcons/discord.svg'
-import twitter from '../Images/socialIcons/twitter.svg'
-import insta from '../Images/socialIcons/instagram.svg'
+import { ReactDOM } from 'react'
+import { SocialIcon } from 'react-social-icons'
+// import discord from '../Images/socialIcons/discord.svg'
+// import twitter from '../Images/socialIcons/twitter.svg'
+// import insta from '../Images/socialIcons/instagram.svg'
 
 function LeftSidebar() {
     return (
@@ -15,11 +17,9 @@ function LeftSidebar() {
                 <span className='list1Number'>10</span>
             </div>
             <div className='social-icon-div'>
-                <ul>
-                    <li><a href="/" target="_blank"><img src={discord} alt="" /></a></li>
-                    <li><a href="/" target="_blank"><img src={twitter} alt="" /></a></li>
-                    <li><a href="/" target="_blank"><img src={insta} alt="" /></a></li>
-                </ul>
+                <a href="/" target="_blank"><SocialIcon network="discord" bgColor="#bfd1ff" /></a>
+                <a href="/" target="_blank"><SocialIcon network="twitter" bgColor="#bfd1ff" /></a>
+                <a href="/" target="_blank"><SocialIcon network="tiktok" bgColor="#bfd1ff" /></a>
             </div>
         </div>
     )
