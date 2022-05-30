@@ -9,7 +9,7 @@ abstract contract ERC721 {
     function setApprovalForAll(address to, bool approved) virtual external;
     function isApprovedForAll(address owner, address operator) virtual external returns(bool approved);
     function transfer(address _to, uint256 _tokenId) virtual external;
-    function transferFrom(address _from, address _to, uint256 _tokenId) virtual external;
+    function SafeTransferFrom(address _from, address _to, uint256 _tokenId) virtual external;
 
     event Transfer(address from, address to, uint256 tokenId);
     event Approval(address owner, address approved, uint256 tokenId);
@@ -35,10 +35,6 @@ contract NFTSwap {
 
     ListedToken[] public listedTokens;
 
-    mapping (address => uint[]) public ownerTokens;
-
-    // For convenience
-    mapping (address => mapping (uint256 => uint)) public tokenIndexInOwnerTokens;
 
     struct Offer {
         address offerer;
@@ -107,16 +103,20 @@ function randomNumber() internal returns(uint)
             tokenId: _tokenId
         }));
         uint listedTokenIndex =  listedTokens.length; 
-        // push returns the new length of the array, so listed token is at index-1
-        ownerTokens[msg.sender].push(listedTokenIndex - 1);
-        uint ownerTokenIndex = ownerTokens[msg.sender].length;
-
-        tokenIndexInOwnerTokens[_contractAddr][_tokenId] = ownerTokenIndex - 1;
 
         emit TokenListed(_contractAddr, _tokenId);
 
         return listedTokenIndex - 1;
     }
+    function withdrawToken(uint _listedTokenIndex) external {
+        ListedToken storage withdrawnListedToken = listedTokens[_listedTokenIndex];
+        require(withdrawnListedToken.owner == msg.sender);
+
+        emit TokenUnlisted(withdrawnListedToken.contractAddr, withdrawnListedToken.tokenId);
+
+        delete listedTokens[_listedTokenIndex];
+    }
+
 
     // Makes an offer for the token listed at _requestedIndex for the token listed at _offeredIndex with just NFT
     function makeOffer(uint _requestedIndex, address _contractAddrOffered,uint256 _tokenIdOffered ,uint fee, uint _expiresIn) external payable returns (uint) {
@@ -156,7 +156,7 @@ function randomNumber() internal returns(uint)
         ListedToken storage requestedToken = listedTokens[_requestedIndex];
 
         // Can not make offers to delisted token
-              require(requestedToken.owner != address(0x0));
+        require(requestedToken.owner != address(0x0));
         
 
         offers.push(Offer({
@@ -186,59 +186,68 @@ function randomNumber() internal returns(uint)
         require(msg.value == fee);
 
 
-        ListedToken storage givenToken = listedTokens[offer.requestedIndex];
-        require(givenToken.owner == msg.sender);
+        ListedToken storage listedToken = listedTokens[offer.requestedIndex];
+        require(listedToken.owner == msg.sender);
 
-        givenToken.owner = offer.offerer;
 
-        uint givenTokenIndex = tokenIndexInOwnerTokens[givenToken.contractAddr][givenToken.tokenId];
-
-        ListedToken storage takenToken = listedTokens[offer.offeredIndex];
+        ListedToken storage offeredToken = listedTokens[offer.offeredIndex];
 
         // If this is a "cash-only" offer
-        if (takenToken.owner == address(0x0)) {  // We are actually checking if null
-            uint toBeMovedTokenIndex = ownerTokens[msg.sender].length - 1;
-
-            //move the given token that will be swapped onto the end of the list
-            if (givenTokenIndex != toBeMovedTokenIndex) {
-                ownerTokens[msg.sender][givenTokenIndex] = ownerTokens[msg.sender][toBeMovedTokenIndex];
-
-                ListedToken storage toBeMovedToken = listedTokens[ownerTokens[msg.sender][toBeMovedTokenIndex]];
-                tokenIndexInOwnerTokens[toBeMovedToken.contractAddr][toBeMovedToken.tokenId] = givenTokenIndex;
-            }
+        if (offeredToken.owner == address(0x0)) {  // We are actually checking if null
 
             uint randomNum = randomNumber();
             address winningAddress = address(0x0);
             //give the token to the offerer
             if(randomNum < 50){
-                ownerTokens[offer.offerer].push(offer.requestedIndex);
-                uint newIndex =  ownerTokens[offer.offerer].length -1;
-                tokenIndexInOwnerTokens[givenToken.contractAddr][givenToken.tokenId] = newIndex;
+                ERC721(listedToken.contractAddr).SafeTransferFrom(msg.sender, offer.offerer, listedToken.tokenId);
                 winningAddress = offer.offerer;
+                listedToken.owner = offer.offerer;
             }else{
                 //give money to lister
                 payable(msg.sender).transfer(uint(offer.exchangeValue));
                 winningAddress = msg.sender;
+                offeredToken.owner = msg.sender;
             }
-            emit OfferTaken(address(0x0), 0, givenToken.contractAddr, givenToken.tokenId, offer.exchangeValue, winningAddress);
+            emit OfferTaken(address(0x0), 0, listedToken.contractAddr, listedToken.tokenId, offer.exchangeValue, winningAddress);
         } else { // nft exchange
-            takenToken.owner = msg.sender;
+            uint randomNum = randomNumber();
+            address winningAddress = address(0x0);
 
-            uint takenTokenIndex = tokenIndexInOwnerTokens[takenToken.contractAddr][takenToken.tokenId];
+            //give the NFT to the offerer
+            if(randomNum < 50){
+                ERC721(listedToken.contractAddr).SafeTransferFrom(msg.sender, offer.offerer, listedToken.tokenId);
+                winningAddress = offer.offerer;
+                listedToken.owner = offer.offerer;
+            }else{
+                //give NFT to lister
+                ERC721(listedToken.contractAddr).SafeTransferFrom(offer.offerer, msg.sender, listedToken.tokenId);
+                winningAddress = msg.sender;
+                offeredToken.owner = msg.sender;
+            }
 
-            uint temp = ownerTokens[msg.sender][givenTokenIndex];
-            ownerTokens[msg.sender][givenTokenIndex] = ownerTokens[offer.offerer][takenTokenIndex];
-            ownerTokens[offer.offerer][takenTokenIndex] = temp;
 
-            temp = tokenIndexInOwnerTokens[givenToken.contractAddr][givenToken.tokenId];
-            tokenIndexInOwnerTokens[givenToken.contractAddr][givenToken.tokenId] =
-                tokenIndexInOwnerTokens[takenToken.contractAddr][takenToken.tokenId];
-            tokenIndexInOwnerTokens[takenToken.contractAddr][takenToken.tokenId] = temp;
-
-            emit OfferTaken(takenToken.contractAddr, takenToken.tokenId, givenToken.contractAddr, givenToken.tokenId, offer.exchangeValue );
+            emit OfferTaken(offeredToken.contractAddr, offeredToken.tokenId, listedToken.contractAddr, listedToken.tokenId, offer.exchangeValue , winningAddress);
         }
 
         // Remove offer since it's taken
+        delete offers[_offerId];
+    }
+
+     // This does not remove the approval of the token
+    function cancelOffer(uint _offerId) external {
+        Offer storage offer = offers[_offerId];
+        require(offer.offerer == msg.sender);
+
+        // Refund to offerer if exchangeValue is greater than 0, which means offerer sent it when making the offer
+        if (offer.exchangeValue > 0) {
+            payable(offer.offerer).transfer(uint(offer.exchangeValue));
+        }
+
+        ListedToken storage requestedToken = listedTokens[offer.requestedIndex];
+        ListedToken storage offeredToken = listedTokens[offer.offeredIndex];
+
+        emit OfferCancelled(requestedToken.contractAddr, requestedToken.tokenId, offeredToken.contractAddr, offeredToken.tokenId, offer.exchangeValue, offer.expires);
+
         delete offers[_offerId];
     }
 
