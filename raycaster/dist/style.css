@@ -1,0 +1,107 @@
+body {
+  margin: 0;
+  background-color: black;
+  text-align: center;
+}
+header{
+  position:fixed;
+  top: 0;
+  width: 100%;
+  background-color: #000000;
+}
+
+li{
+  list-style: none;
+  
+}
+a{
+  color: rgb(255, 255, 255);
+  text-decoration:none;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+.container{
+  width: 1600px;
+  margin: auto;
+}
+
+.navbar{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+}
+
+.nav-menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+  gap: 60px;
+  font-size: 1.5rem;
+}
+.nav-menu a:hover{
+  color:0xD4AF37
+}
+.nav-branding{
+  font-size: 2rem;
+  padding-bottom: 20px;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.header {
+  /*top:45%;*/
+  top: 45%;
+  color: #ffffff;
+}
+.footer {
+  bottom:3%;
+}
+.description {
+  color: gray;
+  padding-top: 50px;
+}
+.btn {
+  border-radius: 30px;
+  padding: 10px 30px;
+}
+
+
+.disable-selection {
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer */
+   -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+}
+h1 {
+
+  font-size: 70px;
+  position:relative;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  padding-left: 5px;
+  font-weight: 400;
+}
+h1::after {
+  content: ' V 2.0';
+  font-size: 14px;
+  position:absolute;
+  top: 3px;
+  padding-left: 5px;
+  font-weight: 400;
+}
+
+
+.navbar .nav-menu a:hover {
+  color: #fdc945;
+}
+.navbar a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+
+
+
