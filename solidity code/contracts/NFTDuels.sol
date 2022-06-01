@@ -1,4 +1,4 @@
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.13;
 
 abstract contract ERC721 {
     function  totalSupply() public view virtual returns (uint256 total);
@@ -15,7 +15,7 @@ abstract contract ERC721 {
     event Approval(address owner, address approved, uint256 tokenId);
 }
 
-contract NFTSwap {
+contract NFTDuels {
     event NFTApproved(address indexed contractAddr, uint256 indexed tokenId);
     event UserApproved(address indexed contractAddr);
     event TokenUnlisted(address indexed contractAddr, uint256 indexed tokenId);
@@ -69,30 +69,30 @@ function randomNumber() internal returns(uint)
  }
 
 
-    //approves all users NFT the be later gambled with
-    function approveNFT( uint256 _tokenId) external {
-        ERC721(msg.sender).approve( address(this), _tokenId);
-        emit NFTApproved(msg.sender, _tokenId);
-    }
+    // //approves all users NFT the be later gambled with
+    // function approveNFT( uint256 _tokenId) external {
+    //     ERC721(msg.sender).approve( address(this), _tokenId);
+    //     emit NFTApproved(msg.sender, _tokenId);
+    // }
 
-    //approves all users NFT the be later gambled with
-    function approveUser() external {
-        ERC721(msg.sender).setApprovalForAll( address(this), true);
-        emit UserApproved(msg.sender);
-    }
+    // //approves all users NFT the be later gambled with
+    // function approveUser() external {
+    //     ERC721(msg.sender).setApprovalForAll( address(this), true);
+    //     emit UserApproved(msg.sender);
+    // }
 
-    //check to make sure our contract is fully approved to transfer all nfts
-    function checkApprovedUser() public returns (bool) {
-        // This requires the token to be approved which should be handled by the UI
-        return ERC721(msg.sender).isApprovedForAll(msg.sender, address(this));
+    // //check to make sure our contract is fully approved to transfer all nfts
+    // function checkApprovedUser() public returns (bool) {
+    //     // This requires the token to be approved which should be handled by the UI
+    //     return ERC721(msg.sender).isApprovedForAll(msg.sender, address(this));
 
-    }
-    //check to make sure our contract is fully approved to transfer this nft
-    function checkApprovedNFT( uint256 _tokenId) public returns (bool) {
-        // This requires the token to be approved which should be handled by the UI
-        return (address(this)) == ERC721(msg.sender).getApproved(_tokenId);
+    // }
+    // //check to make sure our contract is fully approved to transfer this nft
+    // function checkApprovedNFT( uint256 _tokenId) public returns (bool) {
+    //     // This requires the token to be approved which should be handled by the UI
+    //     return (address(this)) == ERC721(msg.sender).getApproved(_tokenId);
 
-    }
+    // }
 
     function escrowToken(address _contractAddr, uint256 _tokenId) public returns (uint){
         require(msg.sender ==   ERC721(_contractAddr).ownerOf(_tokenId));
