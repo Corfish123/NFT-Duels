@@ -3,6 +3,19 @@ body {
     overflow-y: scroll !important;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(90, 90, 90);
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
 /* common style start */
 .connect-wallet-button {
     font-weight: normal;
@@ -114,6 +127,10 @@ body {
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
     border-radius: 8px;
     padding: 20px 10px;
+}
+
+.no-underline {
+    text-decoration: none;
 }
 
 .left-sidebar-list .list1::before {
@@ -651,6 +668,11 @@ p {
     margin: 0 auto;
 }
 
+.pick-nft-modal-container {
+    overflow-y: auto;
+    height: 600px;
+}
+
 .m-icon-div1 {
     width: 90px;
     height: 90px;
@@ -767,26 +789,28 @@ p {
     opacity: 0.5;
 }
 
+.mcard-img {
+    width: 100%;
+}
+
 .mcard-title {
     font-size: 18px;
     color: #fff;
     opacity: 0.75;
+    width: 100%;
 }
 
 .m-card {
     background: #170C31;
     border-radius: 8px;
-}
-
-.mCard-footer {
-    display: flex;
-    justify-content: space-between;
+    width: 249px;
 }
 
 .mCard-price {
     color: #FFFFFF;
     opacity: 0.75;
-
+    text-align: center;
+    padding-bottom: 1rem;
 }
 
 .mCard-footerLeft_text {

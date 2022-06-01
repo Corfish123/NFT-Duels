@@ -16,7 +16,7 @@ import whiteSign from '../Images/random/what-Sign.svg'
 import hs3img from '../Images/random/unsplash_ZnHRNtwXg6Q.png'
 import CoinFlipModal from '../Components/CoinFlipModal'
 import PickNFTModal from '../Components/PickNFTModal'
-import FeeModal from '../Components/feeModal.js'
+import FeeModal from '../Components/FeeModal.js'
 import { ethers } from 'ethers'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
