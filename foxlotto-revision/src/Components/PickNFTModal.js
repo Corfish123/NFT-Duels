@@ -12,9 +12,9 @@ function PickNFTModal(props) {
         // find out how to enable multiple chains? if get rid of options, it does for current user logged in
         const ethNFTs = await Moralis.Web3API.account.getNFTs({
             chain: "polygon",
-            address: "0x18f4a7d3ca4e846489d193c0c03df03843af822b",
+            address: "0xbae3b97c46ad1b5053db349542e742a64d7ceea5",
         });
-        console.log(ethNFTs.result);
+        console.log(ethNFTs); // caps at 100?
         ethNFTs.result.forEach(nft => {
             cloudURL(nft);
         })
@@ -29,8 +29,23 @@ function PickNFTModal(props) {
         // let formattedJson = false;
         let metadata = {};
         try {
+
+            if (url.includes("QmZtSWiE36qLgLqvsVqoHmvUjyTXPCTQjHNUG6EA4dMZUQ")) { console.log(url) }
+            // is this check even needed?
+            // also need to delete leading zeros before number at end...? only if ends in .json
             if (url.startsWith("https://ipfs.moralis.io:2053/ipfs/")) {
                 url = "https://ipfs.io/ipfs/" + url.split("https://ipfs.moralis.io:2053/ipfs/").splice(-1);
+            }
+
+            if (url.endsWith(".json")) {
+                let split = url.split("/");
+                let reg = new RegExp('^[1-9]\d*(\.\d+)?$');
+                let numPart = split[split.length - 1];
+                let actualNum = parseInt(numPart.substring(0, numPart.length - 5));
+                if (reg.test(actualNum)) {
+                    split[split.length - 1] = actualNum;
+                    url = split.join("/") + ".json";
+                }
             }
             // else if (url.startsWith("https://api.opensea.io/api")) {
             //     url += "?format=json";
@@ -60,8 +75,6 @@ function PickNFTModal(props) {
                     delete metadata.data["animation_url"];
                 }
             }
-
-            // if (metadata.data.name === "Gutter Punks Flyer - WoWG") { console.log(metadata.data); }
 
             if (metadata.data.image !== undefined) {
                 try {
