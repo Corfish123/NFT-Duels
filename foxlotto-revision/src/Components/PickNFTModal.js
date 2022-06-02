@@ -11,8 +11,8 @@ function PickNFTModal(props) {
     async function getNFTs() {
         // find out how to enable multiple chains? if get rid of options, it does for current user logged in
         const ethNFTs = await Moralis.Web3API.account.getNFTs({
-            chain: "polygon",
-            address: "0xbae3b97c46ad1b5053db349542e742a64d7ceea5",
+            chain: "eth",
+            address: "0x14EA47a7D5a323866dF527055c3B9A5E758dB9e4",
         });
         console.log(ethNFTs); // caps at 100?
         ethNFTs.result.forEach(nft => {
@@ -22,7 +22,7 @@ function PickNFTModal(props) {
 
     async function cloudURL(nft) {
         // so many edge cases w url... have to accept that some won't work
-
+        // link opean seas to everything
         // anything with opeansea api will throttle - make proxy? cache requests? timer load them?
         let url = nft.token_uri;
         if (url === null) { console.log("nft token uri is null"); return; }
@@ -89,7 +89,7 @@ function PickNFTModal(props) {
             } else {
                 console.log(metadata.data)
             }
-
+            console.log(metadata.data)
             setMetadataNFTs(metadataNFTs => [...metadataNFTs, metadata.data]);
         } catch (error) {
             console.log(error + url);
