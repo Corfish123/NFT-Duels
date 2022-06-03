@@ -28,7 +28,7 @@ contract( 'Market' , (accounts) => {
                 market.escrowToken(
                 token.address,
                 1000
-            ), 'revert');
+            ), "ERC721: owner query for nonexistent token");
 
         });
         it('should prevent escrowing token because not correct owner' , () =>{
@@ -36,7 +36,7 @@ contract( 'Market' , (accounts) => {
                 market.escrowToken(
                 token.address,
                 tokenIdMinter,  { from: buyer }
-            ), 'revert');
+            ), "not the owner of contract");
 
         });
        
@@ -80,47 +80,61 @@ contract( 'Market' , (accounts) => {
                     token.address,
                      tokenIdBuyer ,
                       1000,
-                      100000000), 
-                      {
-                        from: buyer,
-                        value: 500
-                      }), "insufficient funds"; 
+                      100000000, {from: buyer,value: 500}
+                      ), 'insufficient funds'); 
     });
     it('incorrect owner', () => {
         return expectRevert(
-        market.makeOffer(
-            MinterListTokenIndex,
-            token.address,
-             tokenIdMinter ,
-              1000,
-              100000000), 
-              {
-                from: buyer,
-                value: 500
-              }), "not the owner of contract"; 
+            market.makeOffer(
+                MinterListTokenIndex,
+                token.address,
+                 tokenIdMinter ,
+                  1000,
+                  100000000, {from: buyer,value: 1000}
+                  ), "not the owner of contract being offered"); 
 });
-it('offer goes through', () => {
-    //  const tx = 
-    return expectRevert(market.makeOffer(
+it('offer goes through for trading nfts', async () => {
+
+    const tx = await market.makeOffer(
         MinterListTokenIndex,
         token.address,
-        tokenIdBuyer ,
-          1000,
-          100000000, 
-          {
-            from: buyer,
-            value: 1000
-          }), "nothing");
-    //       console.log(tx);
-    // return expectEvent(tx , 'OfferMade'
-    // , {
-    //     requestedContractAddr: token.address,
-    //      requestedTokenId: tokenIdMinter,
-    //        offeredContractAddr: token.address,
-    //         offeredTokenId: tokenIdBuyer,
-    //          exchangeValue : new BN(0)}
-    //     );
-    
+        tokenIdBuyer,
+        1000,
+        100000000, 
+        {from: buyer,value: 1000}
+    );
+
+
+    return expectEvent(tx , 'OfferMade'
+    , {
+        requestedContractAddr: token.address,
+         requestedTokenId: tokenIdMinter,
+           offeredContractAddr: token.address,
+            offeredTokenId: tokenIdBuyer,
+             exchangeValue : new BN(0)}
+        );
+});
+
+it('offer goes through for trading nfts', async () => {
+
+    const tx = await market.makeOffer(
+        MinterListTokenIndex,
+        token.address,
+        tokenIdBuyer,
+        1000,
+        100000000, 
+        {from: buyer,value: 1000}
+    );
+
+
+    return expectEvent(tx , 'OfferMade'
+    , {
+        requestedContractAddr: token.address,
+         requestedTokenId: tokenIdMinter,
+           offeredContractAddr: token.address,
+            offeredTokenId: tokenIdBuyer,
+             exchangeValue : new BN(0)}
+        );
 });
 
     
