@@ -6,10 +6,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract NFT is ERC721 {
 	constructor() ERC721("Coolest NFT", "NFT") {}
 
-	uint private _tokenId = 0;
 
-	function mint() external returns (uint) {
-		_tokenId++;
+	function mint(uint256 _tokenId) external returns (uint) {
 		_mint(msg.sender, _tokenId);
 		return _tokenId;
 	}

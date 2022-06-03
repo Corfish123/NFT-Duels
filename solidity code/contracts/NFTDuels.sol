@@ -18,12 +18,12 @@ abstract contract ERC721 {
 contract NFTDuels {
     event NFTApproved(address indexed contractAddr, uint256 indexed tokenId);
     event UserApproved(address indexed contractAddr);
-    event TokenUnlisted(address indexed contractAddr, uint256 indexed tokenId);
-    event TokenListed(address indexed contractAddr, uint256 indexed tokenId);
+    event TokenUnlisted(address indexed contractAddr, uint256 indexed tokenId, uint256 listedTokenIndex);
+    event TokenListed(address indexed contractAddr, uint256 indexed tokenId, uint256 listedTokenIndex);
     event OfferMade(address requestedContractAddr, uint256 requestedTokenId, address offeredContractAddr, uint256 offeredTokenId, int exchangeValue, uint expires);
     event OfferTaken(address takenContractAddr, uint256 takenTokenId, address givenContractAddr, uint256 givenTokenId, int exchangeValue, address winningAddress);
     event OfferCancelled(address requestedContractAddr, uint256 requestedTokenId, address offeredContractAddr, uint256 offeredTokenId, int exchangeValue, uint expires);
-
+    event Debug(string text);
     // Initializing the state variable
     uint randNonce = 0;
 
@@ -91,12 +91,14 @@ function randomNumber() internal returns(uint)
     // function checkApprovedNFT( uint256 _tokenId) public returns (bool) {
     //     // This requires the token to be approved which should be handled by the UI
     //     return (address(this)) == ERC721(msg.sender).getApproved(_tokenId);
-
     // }
 
     function escrowToken(address _contractAddr, uint256 _tokenId) public returns (uint){
-        require(msg.sender ==   ERC721(_contractAddr).ownerOf(_tokenId));
-
+        require(msg.sender ==   ERC721(_contractAddr).ownerOf(_tokenId) , "not the owner of contract");
+        return addTokenToList(_contractAddr, _tokenId);
+    }
+    function addTokenToList(address _contractAddr, uint256 _tokenId) private returns (uint){
+        
         listedTokens.push(ListedToken({
             owner: msg.sender,
             contractAddr: _contractAddr,
@@ -104,15 +106,16 @@ function randomNumber() internal returns(uint)
         }));
         uint listedTokenIndex =  listedTokens.length; 
 
-        emit TokenListed(_contractAddr, _tokenId);
+        emit TokenListed(_contractAddr, _tokenId, listedTokenIndex-1);
 
         return listedTokenIndex - 1;
+
     }
     function withdrawToken(uint _listedTokenIndex) external {
         ListedToken storage withdrawnListedToken = listedTokens[_listedTokenIndex];
         require(withdrawnListedToken.owner == msg.sender);
 
-        emit TokenUnlisted(withdrawnListedToken.contractAddr, withdrawnListedToken.tokenId);
+        emit TokenUnlisted(withdrawnListedToken.contractAddr, withdrawnListedToken.tokenId, _listedTokenIndex);
 
         delete listedTokens[_listedTokenIndex];
     }
@@ -120,20 +123,21 @@ function randomNumber() internal returns(uint)
 
     // Makes an offer for the token listed at _requestedIndex for the token listed at _offeredIndex with just NFT
     function makeOffer(uint _requestedIndex, address _contractAddrOffered,uint256 _tokenIdOffered ,uint fee, uint _expiresIn) external payable returns (uint) {
-        require(msg.sender ==   ERC721(_contractAddrOffered).ownerOf(_tokenIdOffered));
-        require(msg.value == fee);
-        require(_expiresIn > 0);
 
+        require( ERC721(_contractAddrOffered).ownerOf(_tokenIdOffered)== address(0x0) , "empty address");
+        require(msg.sender ==   ERC721(_contractAddrOffered).ownerOf(_tokenIdOffered)  , "not the owner of contract");
+        require(msg.value >= fee, "insufficient funds");
+        require(_expiresIn > 0, "expiration date isn't positive");
+        require(_requestedIndex >=0 && _requestedIndex < listedTokens.length , " requested index isn't within range");
+        emit Debug("1");
         ListedToken storage requestedToken = listedTokens[_requestedIndex];
-
+        emit Debug("2");
         // Can not make offers to non-listed token
-        require(requestedToken.owner != address(0x0));
+        require(requestedToken.owner != address(0x0) , "requested token owner can't be zero address");
 
-        uint _offeredIndex = escrowToken(_contractAddrOffered, _tokenIdOffered);
-
+        uint _offeredIndex = addTokenToList(_contractAddrOffered, _tokenIdOffered);
+       
         ListedToken storage offeredToken = listedTokens[_offeredIndex];
-
-        require(offeredToken.owner == msg.sender);
 
          offers.push(Offer({
             offerer: msg.sender,
@@ -147,6 +151,9 @@ function randomNumber() internal returns(uint)
         emit OfferMade(requestedToken.contractAddr, requestedToken.tokenId, offeredToken.contractAddr, offeredToken.tokenId, 0, block.number + _expiresIn);
 
         return index - 1;
+
+        //debugging
+        
     }
 
     // Makes an offer for the token listed at _requestedIndex with the sent funds (without offering a token in return)
