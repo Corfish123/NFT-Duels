@@ -3,97 +3,37 @@ import { Modal } from 'react-bootstrap'
 import '../Styles/css/style.css'
 import searchIcon from '../Images/random/SearchIcon.svg'
 import Moralis from 'moralis'
+import { useNFTBalances } from 'react-moralis'
 import NFTCard from './NFTCard';
+import useVerifyMetadata from '../Helpers/UseVerifyMetadata'
 
 function PickNFTModal(props) {
-    const [metadataNFTs, setMetadataNFTs] = useState([]);
+    const { verifyMetadata } = useVerifyMetadata();
+    const [NFTs, setNFTs] = useState([]);
+    const { getNFTBalances, data: fetchedNFTs, error, isLoading, isFetching } = useNFTBalances();
+
+    // eth switch
+    // const chainId = "0x1"
+    // const blockExplorerUrl = "https://etherscan.io/nft/"
+    // const blockSeparator = "/";
+    // const openSeaUrl = "https://opensea.io/assets/ethereum/"
+
+    // polygon switch
+    const chainId = "0x89"
+    const blockExplorerUrl = "https://polygonscan.com/token/"
+    const blockSeparator = "?a=";
+    const openSeaUrl = "https://opensea.io/assets/matic/"
 
     async function getNFTs() {
-        // find out how to enable multiple chains? if get rid of options, it does for current user logged in
-        const ethNFTs = await Moralis.Web3API.account.getNFTs({
-            chain: "eth",
-            address: "0x14EA47a7D5a323866dF527055c3B9A5E758dB9e4",
+        // https://github.com/MoralisWeb3/changelog/blob/main/2022-06-01.md
+        // follow code example for cursor fake pagination
+        await getNFTBalances({ params: { chain: chainId, address: "0x68265954216e4e55c1b00bee93da3467caefbf35" } })
+        console.log(fetchedNFTs)
+        fetchedNFTs?.result.forEach(async NFT => {
+            NFT = await verifyMetadata(NFT);
+            NFT.approved = false;
+            setNFTs(NFTs => [...NFTs, NFT]);
         });
-        console.log(ethNFTs); // caps at 100?
-        ethNFTs.result.forEach(nft => {
-            cloudURL(nft);
-        })
-    }
-
-    async function cloudURL(nft) {
-        // so many edge cases w url... have to accept that some won't work
-        // link opean seas to everything
-        // anything with opeansea api will throttle - make proxy? cache requests? timer load them?
-        let url = nft.token_uri;
-        if (url === null) { console.log("nft token uri is null"); return; }
-        // let formattedJson = false;
-        let metadata = {};
-        try {
-
-            if (url.includes("QmZtSWiE36qLgLqvsVqoHmvUjyTXPCTQjHNUG6EA4dMZUQ")) { console.log(url) }
-            // is this check even needed?
-            // also need to delete leading zeros before number at end...? only if ends in .json
-            if (url.startsWith("https://ipfs.moralis.io:2053/ipfs/")) {
-                url = "https://ipfs.io/ipfs/" + url.split("https://ipfs.moralis.io:2053/ipfs/").splice(-1);
-            }
-
-            if (url.endsWith(".json")) {
-                let split = url.split("/");
-                let reg = new RegExp('^[1-9]\d*(\.\d+)?$');
-                let numPart = split[split.length - 1];
-                let actualNum = parseInt(numPart.substring(0, numPart.length - 5));
-                if (reg.test(actualNum)) {
-                    split[split.length - 1] = actualNum;
-                    url = split.join("/") + ".json";
-                }
-            }
-            // else if (url.startsWith("https://api.opensea.io/api")) {
-            //     url += "?format=json";
-            //     formattedJson = true;
-            // }
-
-            // if (formattedJson) {
-            //     const response = await fetch(url);
-            //     const data = await response.json();
-            //     metadata = data;
-            // } else {
-            //     metadata = await Moralis.Cloud.run("fetchJSON", { theUrl: url });
-            // }
-            metadata = await Moralis.Cloud.run("fetchJSON", { theUrl: url });
-
-            metadata["token_id"] = nft.token_id;
-            metadata["token_address"] = nft.token_address;
-
-            if (metadata.data.image === undefined) {
-                if (metadata.data.image_url !== undefined) {
-                    metadata.data["image"] = metadata.data.image_url;
-                    delete metadata.data["image_url"];
-                }
-
-                if (metadata.data.animation_url !== undefined) {
-                    metadata.data["image"] = metadata.data.animation_url;
-                    delete metadata.data["animation_url"];
-                }
-            }
-
-            if (metadata.data.image !== undefined) {
-                try {
-                    if (metadata.data.image.startsWith("ipfs://ipfs/")) {
-                        metadata.data.image = "https://gateway.moralisipfs.com/ipfs/" + metadata.data.image.split("ipfs://ipfs/").splice(-1);
-                    } else if (metadata.data.image.startsWith("ipfs://")) {
-                        metadata.data.image = "https://gateway.moralisipfs.com/ipfs/" + metadata.data.image.split("ipfs://").splice(-1);
-                    }
-                } catch (error) {
-                    console.log(error + "--imagechange--" + metadata.data.image);
-                }
-            } else {
-                console.log(metadata.data)
-            }
-            console.log(metadata.data)
-            setMetadataNFTs(metadataNFTs => [...metadataNFTs, metadata.data]);
-        } catch (error) {
-            console.log(error + url);
-        }
     }
 
     return (
@@ -111,10 +51,12 @@ function PickNFTModal(props) {
                         <img src={searchIcon} className="m-searchIcon" alt="" />
                     </div>
                     <button onClick={getNFTs}>Get NFTs</button>
+                    <button onClick={() => console.log(NFTs)}>See NFTs</button>
                     {/* modal card */}
                     <div className='modal-card my-4'>
-                        {metadataNFTs.map((nft, i) => {
-                            return (<NFTCard key={i} image={nft.image} name={nft.name} price={100} />)
+                        {NFTs.map((NFT, i) => {
+                            // if (NFT.metadata?.image.includes("Qmet3PF6WYcBMZGydZE66ypSh3gdwUpq5cgDDguLD7Z13d")) { console.log(NFT); }
+                            return (<NFTCard key={i} image={NFT.metadata?.image} name={NFT.metadata?.name !== undefined ? NFT.metadata?.name : "UNKNOWN: " + NFT.name + " #" + NFT.token_id} openSeaUrl={openSeaUrl + NFT.token_address + "/" + NFT.token_id} explorerUrl={blockExplorerUrl + NFT.token_address + blockSeparator + NFT.token_id} price={100} />)
                         })}
                     </div>
                     {/* modal card */}
