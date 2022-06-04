@@ -128,6 +128,11 @@ contract NFTDuels {
     }
 
     function withdrawToken(uint256 _listedTokenIndex) external {
+         require(
+            _listedTokenIndex >= 0 && _listedTokenIndex < listedTokens.length,
+            " requested index isn't within range"
+        );
+        
         ListedToken storage withdrawnListedToken = listedTokens[
             _listedTokenIndex
         ];
@@ -286,14 +291,14 @@ contract NFTDuels {
                 winningAddress = offer.offerer;
                 listedToken.owner = offer.offerer;
 
-                emit Debug("cash only offerer wins");
+    
             } else {
                 //give money to lister
                 payable(msg.sender).transfer(uint256(offer.exchangeValue));
                 winningAddress = msg.sender;
                 offeredToken.owner = msg.sender;
 
-                emit Debug("cash only lister wins");
+         
             }
             emit OfferTaken(
                 listedToken.contractAddr,
@@ -319,7 +324,7 @@ contract NFTDuels {
                 winningAddress = offer.offerer;
                 listedToken.owner = offer.offerer;
 
-                emit Debug("NFT exchange offerer wins");
+                
             } else {
 
                 require(offer.offerer == offeredToken.owner, "you must be the owner of this nft");
@@ -332,7 +337,7 @@ contract NFTDuels {
                 );
                 winningAddress = msg.sender;
                 offeredToken.owner = msg.sender;
-                emit Debug("NFT exchange lister wins");
+            
             }
 
             emit OfferTaken(
@@ -353,6 +358,12 @@ contract NFTDuels {
 
     // This does not remove the approval of the token
     function cancelOffer(uint256 _offerId) external {
+
+        require(
+            _offerId >= 0 && _offerId < offers.length,
+            " requested index isn't within range"
+        );
+
         Offer storage offer = offers[_offerId];
         require(offer.offerer == msg.sender);
 

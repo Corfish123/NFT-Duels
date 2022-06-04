@@ -430,6 +430,62 @@ contract('Market', (accounts) => {
         });
 
     });
-
+    //CANCEL AND WITHDRAW TESTING
     //////////////////////////////////////////////////////////////////
+    describe('Withdrawn and cancel offer with funds', () => {
+        before(async () => {
+            market = await NFTDuels.new();
+            token = await NFT.new();
+    
+            await token.mint(1, { from: minter });
+            await token.approve(market.address, tokenIdMinter, {
+                from: minter
+            });
+
+            await market.escrowToken(
+                token.address,
+                tokenIdMinter,
+                { from: minter }
+            );
+
+            await market.makeOfferWithFunds(
+                MinterListTokenIndex,
+                1000,
+                100000000,
+                { from: buyer, value: 1020 }
+            );
+            
+        });
+
+         it('cancel offer with funds', async () => {
+
+            const tx = await market.cancelOffer(
+                offerIndex, { from: buyer}
+            );
+            return expectEvent(tx, 'OfferCancelled'
+                , {
+                    requestedContractAddr: token.address,
+                    requestedTokenId: tokenIdMinter,
+                    exchangeValue: new BN(1000),
+                    isCashOffer: true
+                }
+            );
+        });
+
+        it('withdraw tokens', async () => {
+
+            const tx = await market.withdrawToken(
+                MinterListTokenIndex, { from: minter}
+            );
+            return expectEvent(tx, 'TokenUnlisted'
+                , {
+                    contractAddr: token.address,
+                    tokenId: tokenIdMinter,
+                    listedTokenIndex: MinterListTokenIndex
+                }
+            );
+        });
+
+    });
+
 });
