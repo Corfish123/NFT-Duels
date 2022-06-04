@@ -1,46 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-abstract contract ERC721 {
-    function totalSupply() public view virtual returns (uint256 total);
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-    function balanceOf(address _owner)
-        public
-        view
-        virtual
-        returns (uint256 balance);
-
-    function ownerOf(uint256 _tokenId)
-        external
-        view
-        virtual
-        returns (address owner);
-
-    function approve(address _to, uint256 _tokenId) external virtual;
-
-    function getApproved(uint256 _tokenId)
-        external
-        virtual
-        returns (address operator);
-
-    function setApprovalForAll(address to, bool approved) external virtual;
-
-    function isApprovedForAll(address owner, address operator)
-        external
-        virtual
-        returns (bool approved);
-
-    function transfer(address _to, uint256 _tokenId) external virtual;
-
-    function SafeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) external virtual;
-
-    event Transfer(address from, address to, uint256 tokenId);
-    event Approval(address owner, address approved, uint256 tokenId);
-}
 
 contract NFTDuels {
     event NFTApproved(address indexed contractAddr, uint256 indexed tokenId);
@@ -301,6 +263,7 @@ contract NFTDuels {
         ListedToken storage listedToken = listedTokens[offer.requestedIndex];
         require(listedToken.owner == msg.sender, "you must be the owner of this nft");
 
+        
         ListedToken storage offeredToken = listedTokens[offer.offeredIndex];
 
         // If this is a "cash-only" offer
@@ -310,8 +273,12 @@ contract NFTDuels {
             uint256 randomNum = randomNumber();
             address winningAddress;
             //give the token to the offerer
-            if (randomNum < 50) {
-                ERC721(listedToken.contractAddr).SafeTransferFrom(
+            if (randomNum < chances) {
+              
+                require(ERC721(listedToken.contractAddr).ownerOf(listedToken.tokenId)== msg.sender, "lister owner should be caller");
+
+   
+                ERC721(listedToken.contractAddr).transferFrom(
                     msg.sender,
                     offer.offerer,
                     listedToken.tokenId
@@ -319,18 +286,20 @@ contract NFTDuels {
                 winningAddress = offer.offerer;
                 listedToken.owner = offer.offerer;
 
-                
+                emit Debug("cash only offerer wins");
             } else {
                 //give money to lister
                 payable(msg.sender).transfer(uint256(offer.exchangeValue));
                 winningAddress = msg.sender;
                 offeredToken.owner = msg.sender;
+
+                emit Debug("cash only lister wins");
             }
             emit OfferTaken(
-                address(0x0),
-                0,
                 listedToken.contractAddr,
                 listedToken.tokenId,
+                address(0x0),
+                0,
                 offer.exchangeValue,
                 winningAddress,
                 offer.isCashOffer
@@ -342,29 +311,36 @@ contract NFTDuels {
 
             //give the NFT to the offerer
             if (randomNum < chances) {
-                ERC721(listedToken.contractAddr).SafeTransferFrom(
+                ERC721(listedToken.contractAddr).transferFrom(
                     msg.sender,
                     offer.offerer,
                     listedToken.tokenId
                 );
                 winningAddress = offer.offerer;
                 listedToken.owner = offer.offerer;
+
+                emit Debug("NFT exchange offerer wins");
             } else {
+
+                require(offer.offerer == offeredToken.owner, "you must be the owner of this nft");
+
                 //give NFT to lister
-                ERC721(listedToken.contractAddr).SafeTransferFrom(
+                ERC721(offeredToken.contractAddr).transferFrom(
                     offer.offerer,
                     msg.sender,
-                    listedToken.tokenId
+                    offeredToken.tokenId
                 );
                 winningAddress = msg.sender;
                 offeredToken.owner = msg.sender;
+                emit Debug("NFT exchange lister wins");
             }
 
             emit OfferTaken(
-                offeredToken.contractAddr,
-                offeredToken.tokenId,
+
                 listedToken.contractAddr,
                 listedToken.tokenId,
+                offeredToken.contractAddr,
+                offeredToken.tokenId,
                 offer.exchangeValue,
                 winningAddress,
                 offer.isCashOffer

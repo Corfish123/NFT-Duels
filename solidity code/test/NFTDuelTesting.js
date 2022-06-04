@@ -1,7 +1,5 @@
 
 const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
-const { expect } = require('chai');
-const { assert } = require('console');
 const NFTDuels = artifacts.require('NFTDuels');
 const NFT = artifacts.require('NFT');
 
@@ -240,15 +238,76 @@ contract('Market', (accounts) => {
         });
 
         //EVENTS GO THROUGH
-        it('take offer goes through for trading nfts', async () => {
+        it('take offer goes through for NFT exchange offer and offerer wins', async () => {
 
             const tx = await market.takeOffer(
                 offerIndex,
                 1000,
-                chances,
-                { from: minter, value: 1000 }
+                100, //chances
+                { from: minter, value: 1000,  gas: 5000000 }
             );
-            return expectEvent(tx, 'OfferTaken'
+            expectEvent(tx, 'OfferTaken'
+                , {
+                    requestedContractAddr: token.address,
+                    requestedTokenId: tokenIdMinter,
+                    offeredContractAddr: token.address,
+                    offeredTokenId: tokenIdBuyer,
+                    exchangeValue: new BN(0),
+                    winningAddress: buyer,
+                    isCashOffer: false
+                }
+            );
+         
+            return await token.ownerOf(tokenIdMinter).then(owner => {
+                assert.equal(owner, buyer, "buyer is suppose to be new owner"); 
+            });  
+        });
+
+    });
+
+    describe('Take Offer for nft exchange offer and lister wins', () => {
+        before(async () => {
+            market = await NFTDuels.new();
+            token = await NFT.new();
+    
+            await token.mint(1, { from: minter });
+            await token.mint(2, { from: buyer });
+
+            await token.approve(market.address, tokenIdMinter, {
+                from: minter
+            });
+
+            await market.escrowToken(
+                token.address,
+                tokenIdMinter,
+                { from: minter }
+            );
+
+            await token.approve(market.address, tokenIdBuyer, {
+                from: buyer
+            });
+
+            await market.makeOffer(
+                MinterListTokenIndex,
+                token.address,
+                tokenIdBuyer,
+                1000,
+                100000000,
+                { from: buyer, value: 1000 }
+            );
+            
+        });
+
+         //EVENTS GO THROUGH
+         it('take offer goes through for NFT exchange offer and lister wins', async () => {
+
+            const tx = await market.takeOffer(
+                offerIndex,
+                1000,
+                0, //chances
+                { from: minter, value: 1000,  gas: 5000000 }
+            );
+            expectEvent(tx, 'OfferTaken'
                 , {
                     requestedContractAddr: token.address,
                     requestedTokenId: tokenIdMinter,
@@ -259,7 +318,118 @@ contract('Market', (accounts) => {
                     isCashOffer: false
                 }
             );
+
+            return await token.ownerOf(tokenIdBuyer).then(owner => {
+                assert.equal(owner, minter, "lister is suppose to be new owner"); 
+            });  
         });
 
     });
+
+
+    describe('Take Offer for cash only deal and offerer wins', () => {
+        before(async () => {
+            market = await NFTDuels.new();
+            token = await NFT.new();
+    
+            await token.mint(1, { from: minter });
+            await token.mint(2, { from: buyer });
+
+            await token.approve(market.address, tokenIdMinter, {
+                from: minter
+            });
+
+            await market.escrowToken(
+                token.address,
+                tokenIdMinter,
+                { from: minter }
+            );
+
+            await token.approve(market.address, tokenIdBuyer, {
+                from: buyer
+            });
+
+            await market.makeOfferWithFunds(
+                MinterListTokenIndex,
+                1000,
+                100000000,
+                { from: buyer, value: 1020 }
+            );
+            
+        });
+
+         //EVENTS GO THROUGH
+         it('Take Offer for cash only deal and offerer wins', async () => {
+
+            const tx = await market.takeOffer(
+                offerIndex,
+                1000,
+                100, //chances
+                { from: minter, value: 1000,  gas: 5000000 }
+            );
+            expectEvent(tx, 'OfferTaken'
+                , {
+                    requestedContractAddr: token.address,
+                    requestedTokenId: tokenIdMinter,
+                    exchangeValue: new BN(1000),
+                    winningAddress: buyer,
+                    isCashOffer: true
+                }
+            );
+
+            return await token.ownerOf(tokenIdMinter).then(owner => {
+                assert.equal(owner, buyer, "offerer is suppose to be new owner"); 
+            });  
+        });
+
+    });
+
+    ////////////////////////////////////////
+    describe('Take Offer for cash only deal and lister wins', () => {
+        before(async () => {
+            market = await NFTDuels.new();
+            token = await NFT.new();
+    
+            await token.mint(1, { from: minter });
+            await token.approve(market.address, tokenIdMinter, {
+                from: minter
+            });
+
+            await market.escrowToken(
+                token.address,
+                tokenIdMinter,
+                { from: minter }
+            );
+
+            await market.makeOfferWithFunds(
+                MinterListTokenIndex,
+                1000,
+                100000000,
+                { from: buyer, value: 1020 }
+            );
+            
+        });
+
+         it('Take Offer for cash only deal and lister wins', async () => {
+
+            const tx = await market.takeOffer(
+                offerIndex,
+                1000,
+                0, //chances
+                { from: minter, value: 1000,  gas: 5000000 }
+            );
+            return expectEvent(tx, 'OfferTaken'
+                , {
+                    requestedContractAddr: token.address,
+                    requestedTokenId: tokenIdMinter,
+                    exchangeValue: new BN(1000),
+                    winningAddress: minter,
+                    isCashOffer: true
+                }
+            );
+        });
+
+    });
+
+    //////////////////////////////////////////////////////////////////
 });
