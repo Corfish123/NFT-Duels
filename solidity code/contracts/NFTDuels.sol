@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 abstract contract ERC721 {
@@ -60,15 +61,17 @@ contract NFTDuels {
         address offeredContractAddr,
         uint256 offeredTokenId,
         int256 exchangeValue,
-        uint256 expires
+        uint256 expires,
+        bool isCashOffer
     );
     event OfferTaken(
-        address takenContractAddr,
-        uint256 takenTokenId,
-        address givenContractAddr,
-        uint256 givenTokenId,
+        address requestedContractAddr,
+        uint256 requestedTokenId,
+        address offeredContractAddr,
+        uint256 offeredTokenId,
         int256 exchangeValue,
-        address winningAddress
+        address winningAddress,
+        bool isCashOffer
     );
     event OfferCancelled(
         address requestedContractAddr,
@@ -76,7 +79,8 @@ contract NFTDuels {
         address offeredContractAddr,
         uint256 offeredTokenId,
         int256 exchangeValue,
-        uint256 expires
+        uint256 expires,
+        bool isCashOffer
     );
     event Debug(string text);
     // Initializing the state variable
@@ -96,6 +100,7 @@ contract NFTDuels {
         uint256 offeredIndex;
         int256 exchangeValue;
         uint256 expires;
+        bool isCashOffer;
     }
     Offer[] public offers;
 
@@ -126,30 +131,7 @@ contract NFTDuels {
             ) % 100;
     }
 
-    // //approves all users NFT the be later gambled with
-    // function approveNFT( uint256 _tokenId) external {
-    //     ERC721(msg.sender).approve( address(this), _tokenId);
-    //     emit NFTApproved(msg.sender, _tokenId);
-    // }
-
-    // //approves all users NFT the be later gambled with
-    // function approveUser() external {
-    //     ERC721(msg.sender).setApprovalForAll( address(this), true);
-    //     emit UserApproved(msg.sender);
-    // }
-
-    // //check to make sure our contract is fully approved to transfer all nfts
-    // function checkApprovedUser() public returns (bool) {
-    //     // This requires the token to be approved which should be handled by the UI
-    //     return ERC721(msg.sender).isApprovedForAll(msg.sender, address(this));
-
-    // }
-    // //check to make sure our contract is fully approved to transfer this nft
-    // function checkApprovedNFT( uint256 _tokenId) public returns (bool) {
-    //     // This requires the token to be approved which should be handled by the UI
-    //     return (address(this)) == ERC721(msg.sender).getApproved(_tokenId);
-    // }
-
+    //take an nft and list it by putting it inside our listing array
     function escrowToken(address _contractAddr, uint256 _tokenId)
         public
         returns (uint256)
@@ -158,9 +140,13 @@ contract NFTDuels {
             msg.sender == ERC721(_contractAddr).ownerOf(_tokenId),
             "not the owner of contract"
         );
+        require(address(this) == ERC721(_contractAddr).getApproved(_tokenId) 
+        , "This contract needs to be approved before getting listed");
+        
         return addTokenToList(_contractAddr, _tokenId);
     }
 
+//private function to add tokens to the list array
     function addTokenToList(address _contractAddr, uint256 _tokenId)
         private
         returns (uint256)
@@ -212,6 +198,7 @@ contract NFTDuels {
             _requestedIndex >= 0 && _requestedIndex < listedTokens.length,
             " requested index isn't within range"
         );
+        require(address(this) == ERC721(_contractAddrOffered).getApproved(_tokenIdOffered) , "This contract needs to be approved before getting listed");
         ListedToken storage requestedToken = listedTokens[_requestedIndex];
         // Can not make offers to non-listed token
         require(
@@ -232,7 +219,8 @@ contract NFTDuels {
                 requestedIndex: _requestedIndex,
                 offeredIndex: _offeredIndex,
                 exchangeValue: 0, //no money offered
-                expires: block.number + _expiresIn
+                expires: block.number + _expiresIn,
+                isCashOffer: false
             })
         );
         uint256 index = offers.length;
@@ -243,7 +231,8 @@ contract NFTDuels {
             offeredToken.contractAddr,
             offeredToken.tokenId,
             0,
-            block.number + _expiresIn
+            block.number + _expiresIn,
+            false
         );
 
         return index - 1;
@@ -252,15 +241,22 @@ contract NFTDuels {
     // Makes an offer for the token listed at _requestedIndex with the sent funds (without offering a token in return)
     function makeOfferWithFunds(
         uint256 _requestedIndex,
-        uint256 _expiresIn,
-        uint256 funds
+         uint256 funds,
+        uint256 _expiresIn
     ) external payable returns (uint256) {
-        require(_expiresIn > 0);
-        require(msg.value == uint256((funds * 102) / 100));
+        require(_expiresIn > 0, "expiration date isn't positive");
+        require(
+            _requestedIndex >= 0 && _requestedIndex < listedTokens.length,
+            "requested index isn't within range"
+        );
+        require(msg.value >= uint256((funds * 102) / 100) , "insufficient funds to play" );
         ListedToken storage requestedToken = listedTokens[_requestedIndex];
 
         // Can not make offers to delisted token
-        require(requestedToken.owner != address(0x0));
+          require(
+            requestedToken.owner != address(0x0),
+            "requested token owner can't be zero address"
+        );
 
         offers.push(
             Offer({
@@ -268,7 +264,8 @@ contract NFTDuels {
                 requestedIndex: _requestedIndex,
                 offeredIndex: 0, // 0 means no token is offered (listed token id's start from 1, see constructor)
                 exchangeValue: int256(funds), // Exchange value is equal to the amount sent
-                expires: block.number + _expiresIn
+                expires: block.number + _expiresIn,
+                isCashOffer: true
             })
         );
 
@@ -279,35 +276,39 @@ contract NFTDuels {
             requestedToken.tokenId,
             address(0x0),
             0,
-            int256(msg.value),
-            block.number + _expiresIn
+            int256(funds),
+            block.number + _expiresIn,
+            true
         );
 
         return index - 1;
     }
 
-    //funds can only be positive
-    function takeOffer(uint256 _offerId, uint256 fee) external payable {
+    //the lister takes the offer and then there is a randomized flipper that flips the chances to earn both nfts
+    function takeOffer(uint256 _offerId, uint256 fee, uint256 chances) external payable {
+    
+        require(
+            _offerId >= 0 && _offerId < offers.length,
+            "offer index isn't within range"
+        );
         Offer storage offer = offers[_offerId];
-        require(offer.expires > block.number);
+        require(offer.expires > block.number, "offer expired already");
 
-        //exchange value should be greater than zero
-        require(offer.exchangeValue >= 0);
-
+        require(chances <= 100 && chances >= 0, "chances must be between 0 to 100");
         //this is the fee one must pay to play the game
-        require(msg.value == fee);
+        require(msg.value >= fee, "insufficient funds to play");
 
         ListedToken storage listedToken = listedTokens[offer.requestedIndex];
-        require(listedToken.owner == msg.sender);
+        require(listedToken.owner == msg.sender, "you must be the owner of this nft");
 
         ListedToken storage offeredToken = listedTokens[offer.offeredIndex];
 
         // If this is a "cash-only" offer
-        if (offeredToken.owner == address(0x0)) {
+        if (offer.isCashOffer) {
             // We are actually checking if null
 
             uint256 randomNum = randomNumber();
-            address winningAddress = address(0x0);
+            address winningAddress;
             //give the token to the offerer
             if (randomNum < 50) {
                 ERC721(listedToken.contractAddr).SafeTransferFrom(
@@ -317,6 +318,8 @@ contract NFTDuels {
                 );
                 winningAddress = offer.offerer;
                 listedToken.owner = offer.offerer;
+
+                
             } else {
                 //give money to lister
                 payable(msg.sender).transfer(uint256(offer.exchangeValue));
@@ -329,7 +332,8 @@ contract NFTDuels {
                 listedToken.contractAddr,
                 listedToken.tokenId,
                 offer.exchangeValue,
-                winningAddress
+                winningAddress,
+                offer.isCashOffer
             );
         } else {
             // nft exchange
@@ -337,7 +341,7 @@ contract NFTDuels {
             address winningAddress = address(0x0);
 
             //give the NFT to the offerer
-            if (randomNum < 50) {
+            if (randomNum < chances) {
                 ERC721(listedToken.contractAddr).SafeTransferFrom(
                     msg.sender,
                     offer.offerer,
@@ -362,7 +366,8 @@ contract NFTDuels {
                 listedToken.contractAddr,
                 listedToken.tokenId,
                 offer.exchangeValue,
-                winningAddress
+                winningAddress,
+                offer.isCashOffer
             );
         }
 
@@ -389,7 +394,8 @@ contract NFTDuels {
             offeredToken.contractAddr,
             offeredToken.tokenId,
             offer.exchangeValue,
-            offer.expires
+            offer.expires,
+            offer.isCashOffer
         );
 
         delete offers[_offerId];
