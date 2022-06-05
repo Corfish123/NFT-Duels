@@ -34,11 +34,16 @@ import Icon5 from '../Images/icons/support.svg'
 import ActiveGame from '../Components/ActiveGame.js'
 import RecentGame from '../Components/RecentGame';
 
+import NFTDuelabi from "../contractABI/NFTDuelsABI.json";
+
 function CoinFlip() {
   const [coinFlipModal, setCoinFlipModal] = React.useState(false);
   const [pickNFTModal, setPickNFTModal] = React.useState(false);
   const [feeModal, setFeeModal] = React.useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+
+  //Rinkeby test net
+  const NFTDuelAddress = "0xDd6994c7CC7459AdA439ab9fEA425Aa15D7B4891";
 
   //requesting to connect a meta mask account
   async function requestAccount() {
@@ -69,8 +74,84 @@ function CoinFlip() {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       renderTokensForOwner(walletAddress)
+
+      
     }
   }
+
+  async function escrowTokens(_contractAddr ,_tokenId ){
+        //connect NFT Duel contract
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = await provider.getSigner();
+        const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+        await NFTDuel.escrowToken(_contractAddr, _tokenId)
+  }
+
+  async function withdrawToken(_listedTokenIndex ){
+    //connect NFT Duel contract
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner();
+    const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+    await NFTDuel.withdrawToken(_listedTokenIndex)
+}
+async function makeOffer(_requestedIndex,
+  _contractAddrOffered,
+   _tokenIdOffered,
+   fee,
+   _expiresIn ){
+  //connect NFT Duel contract
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = await provider.getSigner();
+  const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+
+  //get time stamp
+  var blockNumber = await provider.getBlockNumber();
+  const block = await provider.getBlock(blockNumber);
+
+  await NFTDuel.makeOffer(_requestedIndex,
+    _contractAddrOffered,
+     _tokenIdOffered,
+     fee,
+     block.timestamp + _expiresIn)
+}
+
+async function makeOfferWithFunds(_requestedIndex,
+   funds,
+   _expiresIn ){
+  //connect NFT Duel contract
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = await provider.getSigner();
+  const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+
+  //get time stamp
+  var blockNumber = await provider.getBlockNumber();
+  const block = await provider.getBlock(blockNumber);
+
+  await NFTDuel.makeOffer(_requestedIndex,
+     funds,
+     block.timestamp + _expiresIn)
+}
+
+async function takeOffer(_offerId,
+  fee,
+  chances ){
+ //connect NFT Duel contract
+ const provider = new ethers.providers.Web3Provider(window.ethereum);
+ const signer = await provider.getSigner();
+ const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+ await NFTDuel.takeOffer(_offerId,
+    fee,
+    chances)
+}
+
+async function cancelOffer(_offerId){
+ //connect NFT Duel contract
+ const provider = new ethers.providers.Web3Provider(window.ethereum);
+ const signer = await provider.getSigner();
+ const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
+ await NFTDuel.cancelOffer(_offerId)
+}
+
 
   //get NFTs from owner's wallet
   async function renderTokensForOwner(ownerAddress) {
