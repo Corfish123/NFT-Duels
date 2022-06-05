@@ -85,7 +85,14 @@ function CoinFlip() {
         const signer = await provider.getSigner();
         const NFTDuel = new ethers.Contract(NFTDuelAddress, NFTDuelabi, signer);
         await NFTDuel.escrowToken(_contractAddr, _tokenId)
-  }
+    
+        //don't know if this listener will work
+        NFTDuel.on("TokenListed" , (contractAddr,
+          tokenId,
+          listedTokenIndex) =>{
+            console.log(contractAddr, tokenId , listedTokenIndex)
+          })
+      }
 
   async function withdrawToken(_listedTokenIndex ){
     //connect NFT Duel contract
