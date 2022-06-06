@@ -7,6 +7,9 @@ function useVerifyMetadata() {
   async function verifyMetadata(NFT) {
 
     if (NFT.metadata) {
+      if (typeof (NFT.metadata) === "string") {
+        return NFT;
+      }
       NFT.metadata.image = resolveLink(NFT.metadata.image);
       return NFT;
     };
@@ -18,7 +21,7 @@ function useVerifyMetadata() {
 
   async function getMetadata(NFT) {
     if (!NFT.token_uri || !NFT.token_uri.includes("://")) {
-      console.log("Invalid URI found: " + NFT.token_address + " which has url " + NFT.token_uri);
+      // console.log("Invalid URI found: " + NFT.token_address + " which has url " + NFT.token_uri);
       return;
     }
 
@@ -36,14 +39,13 @@ function useVerifyMetadata() {
       NFT.token_uri = split.join("/");
     }
 
-    // might need to do manual if error
     Moralis.Cloud.run("fetchJSON", { theUrl: NFT.token_uri })
       .then((res) => {
         let metadata = res.data;
         if (!metadata) {
-          console.log("No metadata found x2, giving up: " + NFT.token_address + " which has url " + NFT.token_uri);
+          // console.log("No metadata found x2, giving up: " + NFT.token_address + " which has url " + NFT.token_uri);
         }
-        // not sure if .detail is correct here
+        // dont think throttled check actually works
         else if (
           metadata?.detail &&
           metadata.detail.includes("Request was throttled")
@@ -59,15 +61,31 @@ function useVerifyMetadata() {
         }
       })
       .catch((err) => {
-        console.log("Error1: " + err + " with " + NFT.token_address + " which has url " + NFT.token_uri);
+        // console.log("Error1: " + err + " with " + NFT.token_address + " which has url " + NFT.token_uri);
 
         fetch(NFT.token_uri)
           .then((res) => res.json())
-          .then((data) => {
-            setMetadata(NFT, data);
+          .then((metadata2) => {
+            if (!metadata2) {
+              // console.log("No metadata found x2, giving up: " + NFT.token_address + " which has url " + NFT.token_uri);
+            }
+            // dont think throttled check actually works
+            else if (
+              metadata2?.detail &&
+              metadata2.detail.includes("Request was throttled")
+            ) {
+              // console.log("Request was throttled, will keep re-trying: " + NFT.token_address);
+              setTimeout(function () {
+                getMetadata(NFT);
+              }, 1000);
+            }
+            else {
+              setMetadata(NFT, metadata2);
+              // console.log("Found metadata for: " + NFT.token_address);
+            }
           })
           .catch((err) => {
-            console.log("Error2: " + err + " with " + NFT.token_address + " which has url " + NFT.token_uri);
+            // console.log("Error2 (ACTUALLY COULDNT LOAD): " + err + " with " + NFT.token_address + " which has url " + NFT.token_uri);
           });
       });
   }
@@ -75,13 +93,14 @@ function useVerifyMetadata() {
   function setMetadata(NFT, metadata) {
     NFT.metadata = metadata;
     if (metadata?.image) NFT.metadata.image = resolveLink(metadata.image);
-    if (metadata && !results[NFT.token_uri])
+    if (metadata && !results[NFT.token_uri]) {
       setResults({ ...results, [NFT.token_uri]: NFT });
+    }
   }
 
   const resolveLink = (url) => {
     if (!url || !url.includes("ipfs://")) return url;
-    return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
+    return url.replace("ipfs://", "https://gateway.ipfs.io/");
   };
 
   return { verifyMetadata };
