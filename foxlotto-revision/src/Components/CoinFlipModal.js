@@ -9,8 +9,27 @@ import bigCrown from '../Images/random/bigCrown.svg'
 import bigSnow from '../Images/random/BigSnow.svg'
 import ms2Img1 from '../Images/random/m-s2-img1.png'
 import ms2Img2 from '../Images/random/m-s2-img2.png'
+import { useState } from 'react';
+
+
+
 
 function CoinFlipModal(props) {
+
+    const [coinResult, setResult] = React.useState(false);//head is true, tail is false
+
+
+    function coinToss() {
+     
+            if (Math.random() < 0.5) {
+                setResult(true);
+                console.log("heads");
+            } else {
+                setResult(false);
+                console.log("tails");
+            }
+    }
+
     console.log(props)
     return (
         <Modal
