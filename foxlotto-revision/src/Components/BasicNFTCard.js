@@ -5,9 +5,9 @@ import whiteSign from '../Images/random/what-Sign.svg'
 import { FileSearchOutlined } from '@ant-design/icons'
 import opensealogo from '../Images/random/opensealogo.svg'
 
-function NFTCard(props) {
+function BasicNFTCard(props) {
   return (
-    <div className='m-card'>
+    <div className='m-card' onClick={props.onClick}>
       {props.image !== undefined ? <img className='mcard-img' src={props.image} alt="" /> : <img className='mcard-img white-sign-large' src={whiteSign} alt="" />}
       <div className='p-3'>
         <p className='mcard-title'>{props.name}</p>
@@ -29,10 +29,9 @@ function NFTCard(props) {
             )
           }
         />
-        <p>{props.price}<sub style={{ fontSize: "10px" }}>ETH</sub></p>
       </div>
     </div>
   )
 }
 
-export default NFTCard
+export default BasicNFTCard

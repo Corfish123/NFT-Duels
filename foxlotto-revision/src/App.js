@@ -102,7 +102,7 @@ function App() {
 
               <Routes>
                 {/* switch / to /coinflip when we add more games */}
-                <Route path="/" exact element={<CoinFlip />} />
+                <Route path="/" exact element={<CoinFlip user={user} />} />
                 <Route path="/coinflip/history" element={<CoinFlipHistory />} />
                 <Route path="/coinflip/top" exact element={<CoinFlipTop />} />
                 <Route path="/coinflip/how-to-play" element={<HowToPlayCoinFlip />} />

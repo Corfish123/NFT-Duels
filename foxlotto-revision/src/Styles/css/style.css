@@ -452,10 +452,6 @@ body {
     width: 79px;
 }
 
-.hs2-second {
-    margin-left: 20px;
-}
-
 /* section 3 */
 .h-s3-subtitle {
     font-weight: normal;
@@ -647,6 +643,55 @@ p {
     color: #FFFFFF;
 }
 
+.modal-column {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 80px;
+}
+
+.price-row {
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.grayed-out {
+    opacity: 30%;
+}
+
+.price-text {
+    color: #FFFFFF;
+    margin-right: 20px;
+    margin-bottom: 0;
+}
+
+.right-side-nft-modal {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.cancel-button {
+    background-color: red;
+    color: #FFFFFF;
+    width: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 0;
+}
+
+.confirm-button {
+    background-color: green;
+    color: #FFFFFF;
+    width: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 0;
+}
+
 .closeBtn {
     background-color: #656565;
     border: 0;
@@ -772,7 +817,6 @@ p {
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    cursor: pointer;
 }
 
 .m-input-field::placeholder {
@@ -798,6 +842,10 @@ p {
 
 .mcard-img {
     width: 100%;
+}
+
+.hover-img {
+    cursor: pointer;
 }
 
 .mcard-title {
