@@ -828,3 +828,69 @@ p {
     color: #BFD1FF;
     opacity: 100%;
 }
+
+
+.coin div {
+    width: 100%;
+    height: 100%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+#coin {
+    transition: -webkit-transform 1s ease-in;
+    -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+  }
+#coin div {
+    position: absolute;
+    -webkit-backface-visibility: hidden;
+}
+.crown, .snow{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility:hidden;
+}
+
+.snow{
+    transform: rotateX(180deg);
+}
+
+
+#coin.head {
+    /* -webkit-animation: flipHeads 2s ease-out forwards;
+    -moz-animation: flipHeads 2s ease-out forwards;
+    -o-animation: flipHeads 2s ease-out forwards; */
+    animation: flipHeads 2s ease-out forwards;
+  }
+#coin.tail {
+    /* -webkit-animation: flipTails 2s ease-out forwards;
+    -moz-animation: flipTails 2s ease-out forwards;
+    -o-animation: flipTails 2s ease-out forwards; */
+    animation: flipTails 2s ease-out forwards;
+  }
+@keyframes flipHeads {
+    from {
+      transform: rotateX(0);
+    }
+    to {
+
+      transform: rotateX(2160deg);
+    }
+  }
+  @keyframes flipTails {
+    from {
+
+      transform: rotateX(0);
+    }
+    to {
+
+      transform: rotateX(1980deg);
+    }
+  }
+  

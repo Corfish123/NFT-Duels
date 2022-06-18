@@ -9,6 +9,8 @@ import bigCrown from '../Images/random/bigCrown.svg'
 import bigSnow from '../Images/random/BigSnow.svg'
 import ms2Img1 from '../Images/random/m-s2-img1.png'
 import ms2Img2 from '../Images/random/m-s2-img2.png'
+import fullCrown from '../Images/random/crownCoin.svg'
+import fullSnow from '../Images/random/snowCoin.svg'
 import { useState } from 'react';
 
 
@@ -16,21 +18,20 @@ import { useState } from 'react';
 
 function CoinFlipModal(props) {
 
-    const [coinResult, setResult] = React.useState(false);//head is true, tail is false
+    const [coinResult, setCoinResult] = React.useState("head");//head is true, tail is false
 
 
     function coinToss() {
-     
-            if (Math.random() < 0.5) {
-                setResult(true);
-                console.log("heads");
-            } else {
-                setResult(false);
-                console.log("tails");
-            }
+
+        if (Math.random() < 0.5) {
+            setCoinResult("head");
+            console.log("head");
+        } else {
+            setCoinResult("tail");
+            console.log("tail");
+        }
     }
 
-    console.log(props)
     return (
         <Modal
             {...props}
@@ -49,8 +50,17 @@ function CoinFlipModal(props) {
                                 <img src={bigCrown} alt="" />
                             </div>
                         </div>
-                        <div>
+                        {/* <div>
                             <img src={flippingCircle} className="w-100" alt="" />
+                        </div> */}
+
+                        <div id="coin" className = {coinResult}>
+                            <div class="crown">
+                                <img src = {fullCrown}  className="w-100" alt=""/>
+                            </div>
+                            <div class="snow">
+                                <img src = {fullSnow}  className="w-100" alt=""/>
+                            </div>
                         </div>
                         <div className='position-relative'>
                             <img src={modalimg2} className="w-100 rounded-3" alt="" />
@@ -83,8 +93,13 @@ function CoinFlipModal(props) {
                     </div>
                     {/* section-2 */}
                     <div className='text-center mt-4'>
+                        <img src={closeBtn} alt="" onClick={() => coinToss()} style={{ cursor: "pointer" }} />
+                    </div>
+                    
+                    <div className='text-center mt-4'>
                         <img src={closeBtn} alt="" onClick={props.onHide} style={{ cursor: "pointer" }} />
                     </div>
+
                     {/* modal footer */}
                     <div className='m-footer mt-5'>
                         <small>You can not cancel when timer is less than 5s.</small>
