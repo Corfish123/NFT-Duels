@@ -451,10 +451,8 @@ input::-webkit-inner-spin-button {
     color: #fff;
     margin: 0;
     position: absolute;
-    top: 50%;
     font-size: 15px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(23%, -145%);
     width: 79px;
 }
 
@@ -477,18 +475,15 @@ input::-webkit-inner-spin-button {
     background: linear-gradient(90deg, rgba(55, 63, 125, 0.58) 0%, rgba(79, 92, 191, 0.16) 100%);
     border-radius: 8px;
     height: 80px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     padding: 0px 20px;
 }
 
 .join-game-button {
-    position: absolute;
     margin-left: auto;
     margin-right: auto;
-    left: 0;
-    right: 0;
     text-align: center;
 }
 
@@ -511,10 +506,20 @@ input::-webkit-inner-spin-button {
     opacity: 0.5;
 }
 
-.agd-child-2 {
+.agd-child-red {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: start;
     align-items: center;
+}
+
+.agd-child-blue {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.agd-left-auto {
+    margin-left: auto;
 }
 
 .agd-username {
