@@ -48,7 +48,7 @@ function CoinFlip(props) {
   useEffect(() => {
     if (isInitialized && props.user?.get("ethAddress") !== undefined) {
       // switch address w user later
-      getNFTBalances({ params: { chain: chainId, address: "0x60f4c86457c1954c0ca963dc03534c3311967beb" }, onSuccess: (result) => includeNextPages(result, 1) })
+      getNFTBalances({ params: { chain: chainId, address: "0x60f4c86457c1954c0ca963dc03534c3311967beb" }, onSuccess: (result) => includeNextPages(result, -1) })
     }
   }, [isInitialized, chainId, props.user?.get("ethAddress")])
 

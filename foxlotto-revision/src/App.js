@@ -57,14 +57,6 @@ function App() {
     console.log("logged out");
   }
 
-  // auto update account?
-  // Moralis.onAccountsChanged(function (accounts) {
-
-  //   console.log(accounts);
-  //   // your code to run when "accountsChanged" happens
-
-  // });
-
   return (
     <>
       <Router>

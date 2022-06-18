@@ -4,7 +4,7 @@ import '../Styles/css/style.css'
 import searchIcon from '../Images/random/SearchIcon.svg'
 import BasicNFTCard from './BasicNFTCard';
 import AdvancedNFTCard from './AdvancedNFTCard';
-
+import ethlogo from '../Images/icons/ethlogo.svg'
 
 // pass in NFTs, chainId
 function PickNFTModal(props) {
@@ -38,44 +38,25 @@ function PickNFTModal(props) {
                     {!props.pricePage ? (
                         <div>
                             <div className='position-relative'>
-                                {/* maybe add other things to search by like collection, token id, etc. */}
                                 <input type="text" className='m-input-field' placeholder='Search NFTs by name' onChange={(e) => setSearch(e.target.value.toLowerCase())} />
                                 <img src={searchIcon} className="m-searchIcon" alt="" />
                             </div>
-                            <button onClick={() => console.log(props.NFTs)}> See NFTs</button>
                             <div className='modal-card my-4'>
-                                {/* maybe get actual key up here */}
                                 {props.NFTs.map((NFT, i) => {
                                     return ((NFT.metadata?.name !== undefined ?
                                         NFT.metadata?.name.toLowerCase().includes(search) :
                                         ("UNKNOWN: " + NFT.name + " #" + NFT.token_id).toLowerCase().includes(search)) ? <AdvancedNFTCard
                                         key={i}
-                                        actualIndex={i} // this index is actually wrong if we search lmao
+                                        actualIndex={i}
                                         image={NFT.metadata?.image}
                                         name={NFT.metadata?.name !== undefined ? NFT.metadata?.name : "UNKNOWN: " + NFT.name + " #" + NFT.token_id}
                                         openSeaUrl={openSeaUrl + NFT.token_address + "/" + NFT.token_id}
                                         explorerUrl={blockExplorerUrl + NFT.token_address + blockSeparator + NFT.token_id}
                                         approved={NFT.approved}
-                                        onApprove={props.onApprove} // pass in changeApproval function as a prop from coinflip 
-                                        onClick={() => { setSelectedNFT(NFT); props.goPricePage() }} // idk if i can pass in like this
+                                        onApprove={props.onApprove}
+                                        onClick={() => { setSelectedNFT(NFT); props.goPricePage() }}
                                     /> : null)
                                 })}
-                                {/* {props.NFTs.filter((potentialNFT, idx) => potentialNFT.metadata?.name !== undefined ?
-                                    potentialNFT.metadata?.name.toLowerCase().includes(search) :
-                                    ("UNKNOWN: " + potentialNFT.name + " #" + potentialNFT.token_id).toLowerCase().includes(search)).map((NFT, i) => {
-                                        // console.log(idx)
-                                        return (<AdvancedNFTCard
-                                            key={i}
-                                            actualIndex={i} // this index is actually wrong if we search lmao
-                                            image={NFT.metadata?.image}
-                                            name={NFT.metadata?.name !== undefined ? NFT.metadata?.name : "UNKNOWN: " + NFT.name + " #" + NFT.token_id}
-                                            openSeaUrl={openSeaUrl + NFT.token_address + "/" + NFT.token_id}
-                                            explorerUrl={blockExplorerUrl + NFT.token_address + blockSeparator + NFT.token_id}
-                                            approved={NFT.approved}
-                                            onApprove={props.onApprove} // pass in changeApproval function as a prop from coinflip 
-                                            onClick={() => { setSelectedNFT(NFT); props.goPricePage() }} // idk if i can pass in like this
-                                        />)
-                                    })} */}
                             </div>
                         </div>
                     ) : (<div className='modal-column'>
@@ -87,24 +68,23 @@ function PickNFTModal(props) {
                         />
                         <div className='right-side-nft-modal'>
                             <div className='price-row'>
-                                <p className='price-text'>Price (ETH)</p>
+                                <p className='price-text'>Price <img className='eth-logo' src={ethlogo} alt="eth logo" /></p>
+
                                 <input
                                     type="number"
-                                    className=''
+                                    className='m-input-field'
                                     placeholder="Ex: 100"
                                     onChange={(e) => setPrice(e.target.value)}
                                 />
-                                {/* eth logo */}
                             </div>
                             <div className='button-row'>
                                 <button
-                                    className='cancel-button'
-                                    // setSelectedNFT({}); 
+                                    className='cancel-confirm-button'
                                     onClick={props.goNFTPage}>
                                     Cancel
                                 </button>
                                 <button
-                                    className='confirm-button'
+                                    className='cancel-confirm-button'
                                     onClick={() => console.log("confirmed - remove from current nfts?")}>
                                     Confirm
                                 </button>
