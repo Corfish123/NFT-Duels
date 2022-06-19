@@ -288,7 +288,7 @@ async function cancelOffer(_offerId){
                     <p className='placebet-para' onClick={() => setCoinFlipModal(true)} >PLACE BET</p>
                     <CoinFlipModal
                       show={coinFlipModal}
-                      onHide={() => setCoinFlipModal(false)}
+                      closeModal={() => setCoinFlipModal(false)}
                     />
                   </div>
                 </div>

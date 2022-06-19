@@ -11,30 +11,39 @@ import ms2Img1 from '../Images/random/m-s2-img1.png'
 import ms2Img2 from '../Images/random/m-s2-img2.png'
 import fullCrown from '../Images/random/crownCoin.svg'
 import fullSnow from '../Images/random/snowCoin.svg'
-import { useState } from 'react';
-
+import { useState ,useEffect} from 'react';
 
 
 
 function CoinFlipModal(props) {
 
-    const [coinResult, setCoinResult] = React.useState("head");//head is true, tail is false
+    const [coinResult, setCoinResult] = useState("");
 
 
+      
     function coinToss() {
-
+        
         if (Math.random() < 0.5) {
             setCoinResult("head");
             console.log("head");
+        
         } else {
             setCoinResult("tail");
             console.log("tail");
         }
+        
+
+        // setTimeout(setCoinResult(""), 5000);
+    }
+    function onHide(){
+        setCoinResult(""); 
+        props.closeModal();
     }
 
     return (
         <Modal
-            {...props}
+            show= {props.show}
+            onHide = {() => onHide()}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -54,7 +63,7 @@ function CoinFlipModal(props) {
                             <img src={flippingCircle} className="w-100" alt="" />
                         </div> */}
 
-                        <div id="coin" className = {coinResult}>
+                        <div id="coin" className = {coinResult} key = {+new Date()}>
                             <div class="crown">
                                 <img src = {fullCrown}  className="w-100" alt=""/>
                             </div>
@@ -97,7 +106,7 @@ function CoinFlipModal(props) {
                     </div>
                     
                     <div className='text-center mt-4'>
-                        <img src={closeBtn} alt="" onClick={props.onHide} style={{ cursor: "pointer" }} />
+                        <img src={closeBtn} alt="" onClick={() => onHide()} style={{ cursor: "pointer" }} />
                     </div>
 
                     {/* modal footer */}
