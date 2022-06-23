@@ -13,5 +13,5 @@ Players will negotiate pool size and then contribute equivalent priced NFT(s). T
 <p align="center">
   <img src="https://github.com/Corfish123/NFT-Duels/blob/main/screenshots/dueling_page.png" width="800" />
   <img src="https://github.com/Corfish123/NFT-Duels/blob/main/screenshots/main_page.png" width="800" />
-  <img src="https://github.com/Corfish123/NFT-Duels/blob/main/screenshots/pick_NFT_page.png" width="800" />
+  <img src="https://github.com/Corfish123/NFT-Duels/blob/main/screenshots/pick_NFT_%20page.png" width="800" />
 </p>
