@@ -8,5 +8,10 @@ Designed to be community-powered, betting on the platform are solely between use
 Players will negotiate pool size and then contribute equivalent priced NFT(s). The winner will receive a payout of NTFs through smart contracts, and the platform is paid a percentage of the winner's winning as a transaction fee for hosting the game.
 "We seek to tackle fair play and transparency issues within betting platforms while opening a new outlet for NFTs within the entertainment arena. We hope to create a secured, enjoyable betting platform for the community."
 
+### Screenshots
 
-
+<p align="center">
+  <img src="https://github.com/Corfish123/NFT-Duels/screenshots/dueling page.png" width="800" />
+  <img src="https://github.com/Corfish123/NFT-Duels/screenshots/main page.png" width="800" />
+  <img src="https://github.com/Corfish123/NFT-Duels/screenshots/pick NFT page.png" width="800" />
+</p>
